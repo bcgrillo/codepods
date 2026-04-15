@@ -1,0 +1,22 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "azure/${OPENAI_MODEL_NAME}",
+  "autoupdate": false,
+  "server": {
+    "port": 4096,
+    "hostname": "0.0.0.0"
+  },
+  "provider": {
+    "azure": {
+      "options": {
+        "baseURL": "${OPENAI_BASE_URL}",
+        "resourceName": "${OPENAI_RESOURCE_NAME}"
+      },
+      "models": {
+        "${OPENAI_MODEL_NAME}": {
+          "name": "${OPENAI_DEPLOYMENT}"
+        }
+      }
+    }
+  }
+}

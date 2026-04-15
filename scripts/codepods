@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+# Dispatcher for the .NET CLI (works from any current directory)
+if ! command -v dotnet >/dev/null 2>&1; then
+  echo "dotnet is required but was not found in PATH." >&2
+  exit 1
+fi
+
+# Prefer published binary when available.
+if [ -f "$REPO_ROOT/.install/bin/Codepods.Cli.dll" ]; then
+  exec env CODEPODS_ROOT_PATH="$REPO_ROOT" dotnet "$REPO_ROOT/.install/bin/Codepods.Cli.dll" "$@"
+fi
+
+# Fallback to project run for development workflows.
+exec env CODEPODS_ROOT_PATH="$REPO_ROOT" dotnet run --project "$REPO_ROOT/src/Codepods.Cli" -- "$@"

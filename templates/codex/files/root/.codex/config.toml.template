@@ -1,0 +1,14 @@
+# Example Codex CLI configuration - generated from template
+# Variables replaced from .env at container creation time
+
+model = "${OPENAI_MODEL_NAME}"
+
+model_provider = "azure"
+
+[model_providers.azure]
+name = "Azure OpenAI"
+base_url = "${OPENAI_BASE_URL}"
+env_key = "OPENAI_API_KEY"
+deployment_id = "${OPENAI_DEPLOYMENT}"
+wire_api = "responses"
+query_params.api-version = "2025-04-01-preview"
