@@ -1,0 +1,77 @@
+TITLE: Inteligencia Artificial sin fórmulas: Procesando el Lenguaje Natural
+
+En esta segunda entrega de la serie Inteligencia Artificial sin fórmulas (sí, copié la idea de El Tamiz, por si te perdiste la primera parte, deberías empezar por allí), vamos a hablar de algo muy importante antes de entrar de lleno en la IA generativa: el procesamiento de lenguaje natural. Pero antes, el aviso:
+
+Aviso importante: Como dije anteriormente (y como siempre advertía el autor de las series “sin fórmulas” que estoy imitando), no esperes rigurosidad o precisión en estos artículos. Mi objetivo no es ser exacto, sino que sea entendible para el mayor número de personas posibles, incluso personas que no sepan nada de programación, probabilidad o estadística, etc. Si eres un profesional de esta materia, puede que esto no te guste, te ponga nervioso, quieras morderte las uñas o romper tu flamante nuevo monitor curvo, si crees que puede ser tu caso, no sigas, no me hago responsable.Y ahora sí, ¡vamos allá!
+
+### ¿Por qué es importante?
+Si recuerdas algo del primer artículo (Redes Neuronales), contaba que los ordenadores son muy buenos recibiendo órdenes específicas pero, hasta hace muy poco, eran pésimos si intentabas hablar con ellos.
+
+[FIGURE]
+Esto se debe a la propia naturaleza de la computación, ceros y unos, opciones finitas para cada acción que debe ser ejecutada. Sin embargo, nuestra forma de comunicarnos no es así, decimos lo mismo de muchas formas distintas, nos podemos equivocar, cambiar de estilo, utilizar la ironía o el sarcasmo… Hacer que las máquinas “hablaran humano” era muy complicado, por lo que históricamente hemos optado por otro camino más sencillo: hablar nosotros su idioma. Así hemos creado los lenguajes de programación, los comandos, las ventanitas con botones, etc. Eso nos permitió avanzar a toda velocidad en la Era de la Información.
+
+Y así, durante décadas hemos generado cantidades gigantescas de datos, aplicaciones, páginas web, fotografías, redes sociales, correos electrónicos, trabajos académicos… Los sistemas de información se volvieron cada vez más grandes, complejos, con más y más archivos, que a su vez requerían nuevas herramientas y formas de explotarlos. Aquí es donde el procesamiento de lenguaje natural (PLN, o NLP en inglés) cobra especial importancia, sobre todo en el ámbito de la búsqueda de información. Si querías dar buenos resultados, no podías responder “como lo haría un ordenador”, necesitabas analizar los textos de forma humana: buscar palabras con significados similares, detectar y corregir errores en la escritura (“¿Quizás querías decir…?”), entender peticiones hechas de maneras distintas… Si los sistemas no entendían el lenguaje humano perdíamos información por el camino, dábamos respuestas incompletas o directamente equivocadas.
+
+### ¿Y si los ordenadores entendieran el lenguaje humano?
+Permitidme un pequeño inciso para una reflexión filosófica: ¿qué significa entender algo? Hay un famoso experimento mental propuesto por el filósofo John Searle llamado la habitación china. La idea es más o menos así:
+
+Imagina que una persona que no sabe nada de chino está encerrada en una habitación. Le pasan mensajes escritos en chino por debajo de la puerta, y tiene un gran libro de instrucciones (en español) que le dice exactamente cómo responder a cada mensaje usando símbolos chinos. La persona, siguiendo las instrucciones del libro, es capaz de dar respuestas perfectamente correctas en chino, aunque no tenga ni idea de lo que está diciendo. Desde fuera, parece que “entiende” el idioma, pero en realidad solo sigue reglas mecánicas.¿Y qué tiene que ver esto con la IA?
+
+Pues, en cierto modo, los grandes modelos de lenguaje (como ChatGPT o cualquier sistema moderno con capacidades de PLN) se parecen mucho a esa persona de la habitación china. No entienden el significado de las palabras como lo haría un humano, pero pueden generar respuestas sorprendentemente coherentes y útiles. Han aprendido a imitar cómo escribimos y hablamos, a detectar patrones, a corregir errores, a interpretar preguntas y a dar respuestas razonables en muchísimos contextos.
+
+Como mencionaba en el artículo anterior de la serie, para conseguir esto, entra en juego el concepto de “vectorizar” el lenguaje, es decir, transformar palabras, frases y textos en números que un ordenador pueda procesar. Si las redes neuronales que vimos antes aprendían a distinguir colores, formas o sonidos, en este caso deben aprenden a “posicionar” palabras y frases en espacios de miles de dimensiones, donde las palabras con significados parecidos quedan cerca unas de otras, y las que no tienen nada que ver, muy lejos. Así es como los sistemas de PLN pueden, por ejemplo, saber que “perro” y “can” son casi lo mismo.
+
+[FIGURE]
+
+### De texto a números
+Si queremos transformar cualquier texto en algo que un ordenador pueda procesar y llegar a entender, lo primero es crear un algoritmo que transforme cualquier texto en números. Para conseguir esto, los sistemas de PLN primero dividen los textos en piezas individuales llamadas tokens. Un token puede ser una palabra, parte de una palabra, o incluso una letra.
+
+Supongamos que “helado” es un token válido, pues esa palabra se traducirá en ese token. ¿Qué ocurrirá entonces con la palabra mal escrita elado? Supongamos que no existe como token. Pues el sistema la descompondrá en tokens existentes, por ejemplo, “e” y “lado”. El sistema siempre podrá descomponer cualquier texto en un número finito de tokens. Incluso 0l@ qu3 a$e?, en el peor de los casos, cada caracter será un token.
+
+Como nuestro objetivo es simplificar, de aquí en adelante diré palabras, pero siempre me refiero a tokens. Esto es importante porque la palabra “elado” no existe, pero como hemos visto, sí existen sus tokens.
+
+[FIGURE]
+La forma que tenemos de convertir cada palabra en números es similar a ubicarlas en un mapa, solo que no es un mapa plano, sino uno con muchísimas coordenadas, más de las que podemos imaginar. A este mapa se le llama espacio vectorial. Imagina que la coordenada “X” representa el significado literal, pues dos palabras con significado similar tendrán esa coordenada parecida. Si la coordenada “Y” representa la forma de escribir, pues “pato” y “gato” estarán cerca. La coordenada “Z” podría representar el tipo (sustantivo, adjetivo, verbo…), y así con muchas otras coordenadas, si se trata de objetos, animales, cosas grandes o pequeñas, etc.
+
+[FIGURE]
+De este modo ya podemos encontrar similitudes entre frases, corregir errores de escritura, cambiar una palabra por otra con significado parecido, realizar traducciones a otros idiomas. Estos sistemas estaban geniales, pero todavía cometían errores, como no saber distinguir entre un “banco” de un parque y una entidad financiera.
+
+Y aquí es donde los transformers cambiaron todo: no solo colocan las palabras en este mapa de miles de dimensiones, sino que además entienden cómo cambian de significado según el contexto, algo que antes era imposible.
+
+La arquitectura transformer es de las grandes revoluciones de la inteligencia artificial de los últimos años: Lamentablemente, esto no tiene nada que ver con robots gigantes 😢 pero sí con un cambio de paradigma en la forma de procesar el lenguaje.
+
+Un dato importante: Aunque muchos asocian esta arquitectura con OpenAI y ChatGPT, en realidad, la arquitectura transformer fue inventada por Google en 2017. Y no solo eso: Google fue el primero en aplicarla a gran escala en su buscador, mucho antes de que ChatGPT existiera, con un modelo llamado BERT. Así, empezaron a mejorar los resultados de búsqueda entendiendo mejor el contexto y el significado de nuestras preguntas.¿Y qué tiene de especial esta arquitectura? Hasta ese momento, las máquinas “leían” los textos de forma bastante limitada, palabra por palabra y casi sin mirar atrás. Los transformers, en cambio, permitieron a los sistemas mirar toda la frase (o incluso textos enormes) a la vez, fijándose en cómo las palabras se relacionan entre sí, independientemente de su posición, lo llamaron mecanismo de atención.
+
+### “Atención es todo lo que necesitas”
+
+[FIGURE]
+Un transformer es un tipo de red neuronal muy especial, diseñada para trabajar con secuencias (como los textos), y lo que lo hace tan potente es un mecanismo llamado mecanismo de atención. Básicamente, cuando el modelo procesa una frase, cada palabra “presta atención” a las demás, decidiendo cuáles son más importantes para ella en ese contexto.
+
+Por ejemplo, si lees la frase “El gato de mi vecino duerme en el jardín”, para saber quién duerme, tienes que unir “gato” con “duerme”, ignorando todo lo del medio. Los transformers hacen exactamente eso, pero de forma automática y a una escala gigantesca. Veamos cómo lo hacen.
+
+“El gato de mi vecino duerme en el jardín”
+- 1. De texto a números: Primero, el modelo toma cada palabra y la transforma en un vector que representan su significado, forma, tipo, etc. Pero ojo: el modelo aún no sabe en qué orden están esas palabras.
+- 2. Añadir la posición: Para entender que "El" va primero, "gato" después, y así sucesivamente, el modelo añade a cada vector una especie de etiqueta que indica su posición en la frase. Así puede distinguir entre: "el gato de mi vecino" de "el vecino de mi gato". Que suenan parecidas, pero no significan lo mismo.
+- 3. El mecanismo de atención: Aquí ocurre la magia. Cada palabra mira a todas las demás y decide a cuáles debe prestar más atención para entenderse mejor. Veamos un ejemplo: "duerme" se pregunta: "¿Quién está durmiendo aquí?"Entonces compara su significado con el de las demás palabras. ¿Y qué encuentra?"gato" → tiene sentido, probablemente es el que duerme."vecino" → tiene sentido, a lo mejor es él quien duerme."jardín" → dice dónde duerme, también es relevante.Gracias al paso 2 y al entrenamiento previo el modelo sabe que, en "el gato de mi vecino", lo que está antes del “de” suele ser el sujeto . Así reparte su atención más o menos así:Mucha atención a "gato".Algo de atención a "vecino" y "jardín".Menos a "El", "de", "mi", etc...Este reparto de atención es automático y ocurre en paralelo para todas las palabras de la frase. Es como si todas las palabras estuvieran en una mesa redonda hablando entre ellas.
+- 4. Reescribir los significados: Una vez que cada palabra ha “hablado” con las demás, su vector original se actualiza. Ahora tiene una mezcla de información relevante para entenderse en contexto. El nuevo vector de "duerme" ya sabe que el sujeto es "el gato de mi vecino". El vector de "gato" ahora sabe que es de un vecino, y que "duerme". El vector de "jardín" entiende que no está ahí por casualidad: es el lugar donde ocurre la acción.
+- 5. Repetir el proceso varias veces: Este proceso de atención y mezcla no pasa una sola vez, sino en varias capas. Cada vez que pasa, los significados se refinan más, como si la frase se releyera varias veces con mayor profundidad.Gracias a los transformers, el mapa se ha vuelto mucho más detallado, ahora tiene miles de coordenadas. Eso quiere decir que cada palabra individual está definida por, por ejemplo, unos 3.000 valores numéricos. No solo sabemos qué significa, cómo suena, de qué tipo es… Sabemos también su encaje con las demás palabras de la frase analizada.
+
+[FIGURE]
+Permitir que los sistemas conocieran cómo se relacionaban las palabras en un contexto abría un mundo de posibilidades que hasta ese momento no era posible, como en el ejemplo de la imagen, ahora podíamos realizar “operaciones semánticas” como “obtener la capital de un país”.
+
+Esta funcionalidad fue sumamente útil para mejorar los sistemas de traducción automática, el salto fue gigantesco. De hecho, los ingenieros de Google inventores de los transformers trabajaban en este campo (el de las traducciones), y poco después DeepL sorprendió al mundo con traducciones casi perfectas. Los creadores del transformer también destacaron su potencial en tareas de responder preguntas y completar texto, lo que desembocaría en el “boom” de la inteligencia artificial generativa, que espero explicar más en detalle en otro artículo.
+
+### Y entonces… ¿entienden las máquinas?
+Pues depende de a quién le preguntes. Si nos ponemos filosóficos, quizás no “entiendan” el lenguaje en el sentido humano, quizás nunca lo hagan exactamente como nosotros, como tampoco lo hacía la persona de la habitación china. Pero lo cierto es que para la mayoría de los efectos prácticos, la diferencia da un poco igual: Si no podemos distinguir entre una máquina que entiende y una que parece que entiende… ¿realmente importa?
+
+Como dice la Tercera Ley de Clarke:
+
+“Toda tecnología lo suficientemente avanzada es indistinguible de la magia.”¡Gracias por leerme!
+
+👋
+
+Aclaración: A los vectores numéricos que representan palabras, frases u otros elementos en el procesamiento de lenguaje natural se les llama embeddings. Existen dos tipos principales: los clásicos, donde cada palabra tiene un único vector fijo, y los contextuales (generados por modelos como los transformers), donde el vector de cada palabra cambia según el contexto en que aparece.Parece magia, ¡pero solo son matemáticas! Si quieres leer un poco más sobre esto:
+
+- Transformer: A Novel Neural Network Architecture for Language Understanding (2017) Publicación en Google Search introduciendo la arquitectura transformer, con enlace al paper “Attention Is All You Need”.
+- Tokenizer Playground de OpenAI — En este playground puedes ver cómo una palabra o frase se divide en tokens.
+- Procesamiento del Lenguaje Natural (Wikipedia) — Historia y dificultades en el procesamiento del lenguaje¹Imagen adaptada de: Guillaume Desagulier (2018), “Word embeddings: the (very) basics”. Enlace

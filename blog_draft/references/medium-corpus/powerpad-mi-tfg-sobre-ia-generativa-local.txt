@@ -1,0 +1,56 @@
+TITLE: PowerPad: mi TFG sobre IA generativa local
+
+Hace unos meses defendí mi Trabajo Fin de Grado y quería aprovechar para compartirlo también por aquí. Ha sido un proyecto que me ha acompañado durante casi un año y que me ha permitido jugar y aprender con Ollama y los modelos generativos locales.
+
+PowerPad es una aplicación de escritorio, al estilo de ChatGPT o Claude, que utiliza el motor de IA local de Ollama (que en el momento de la entrega todavía no tenía interfaz gráfico propio), facilita la gestión y descarga de modelos, permite editar notas y crear agentes con prompts específicos, y también usar servicios en la nube si quieres, como OpenAI o Azure.
+
+Echa un vistazo a este vídeo que resume la funcionalidad 👇
+
+https://medium.com/media/015db42fe5c8ef69ccc8a82f995f0a11/href
+### ¿De dónde surge la idea?
+En los últimos años la IA generativa ha explotado, pero casi siempre asociada a servicios en la nube. Eso trae ventajas, pero también inconvenientes: dependencia de Internet, falta de privacidad y, en muchos casos, suscripciones de pago.
+
+A raíz de probar herramientas como Ollama y otras basadas en llama.cpp, vi que había una oportunidad clara: hacer más accesible la IA local a cualquier persona, sin necesidad de pelearse con la consola o configuraciones complicadas montando un servidor web.
+
+Otra de las cosas de las que me di cuenta es que cada vez usaba más ChatGPT a modo de repositorio de información, ahora mis notas estaban desordenadas por todas partes, me parecía interesante la idea de centralizar conversaciones y notas.
+
+Y así nació PowerPad, una aplicación de escritorio que simplifica todo esto y ofrece un espacio de trabajo unificado para notas y conversaciones con soporte a la IA que más te guste.
+
+[FIGURE]
+
+### ¿Qué hace PowerPad?
+En pocas palabras, PowerPad es un bloc de notas inteligente con superpoderes:
+
+- Puedes instalar y gestionar modelos de IA local sin complicaciones (busca directamente en la biblioteca de Ollama, en Hugging Face, GitHub Models, etc.)
+- Tienes la opción de crear agentes personalizados (por ejemplo, un asistente que resuma apuntes, otro que traduzca textos, etc.).
+- Incluye una ventana emergente para edición rápida: seleccionas texto en cualquier aplicación y lo envías a la IA con un atajo de teclado.
+- Todo se guarda en local por defecto, aunque también puedes conectar servicios en la nube si lo prefieres.
+[FIGURE]
+
+### Lo que hay detrás
+A nivel técnico, el proyecto fue un buen reto. La aplicación está desarrollada con WinUI 3 y .NET 8, siguiendo el patrón MVVM para mantener la lógica separada de la interfaz.
+
+Detrás de lo que parece una interfaz sencilla hay bastante trabajo:
+
+- Gestión de ficheros y notas con arrastrar y soltar.
+- Persistencia local en JSON para no depender de bases de datos externas.
+- Un sistema de contratos e interfaces que facilita integrar distintos proveedores (Ollama, Azure, OpenAI…).
+[FIGURE]
+
+### Retos y aprendizajes
+Más allá del código, lo complicado fue la velocidad a la que evoluciona la IA. Mientras desarrollaba, cada semana aparecía un modelo nuevo, una versión nueva de Ollama, una librería distinta... Eso te obliga a estar al día y adaptar documentación y pruebas.
+
+También aprendí mucho sobre cómo funcionan los modelos por dentro: cuantización, arquitectura Transformer, agentes, etc. Fue un repaso intensivo que me ha ayudado a entender mejor lo que pasa “detrás de la magia”.
+
+Por ejemplo, cómo componer un prompt para que se utilice como un editor de textos que, no solo permite establecer su función, sino que admite un parámetro al vuelo. Como este agente traductor:
+
+[FIGURE]
+
+### Impacto y conclusiones
+La idea detrás de herramientas como PowerPad busca democratizar el acceso a la IA generativa, sobre todo en entornos donde la conexión a Internet no siempre es posible. Además, fomenta la privacidad (todos los datos se quedan en tu equipo) y apuesta por un consumo más eficiente de recursos frente a depender de grandes centros de datos.
+
+En resumen: ha sido un proyecto exigente, pero muy gratificante. He conseguido juntar teoría y práctica en algo que no se queda en un “experimento académico”, sino en una herramienta real que yo mismo he usado en mi día a día.
+
+👉 El código está disponible en GitHub: https://github.com/bcgrillo/powerpad
+
+[FIGURE]

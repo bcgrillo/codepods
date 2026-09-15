@@ -1,0 +1,46 @@
+TITLE: Codepods: Un gestor de agentes de terminal
+
+Un repaso a lo que aprendí soltando el volante de Copilot
+[FIGURE]
+La primera vez que probé Copilot CLI tuve una sensación extraña: aquello ya no era un copiloto. Usarlo dentro de VS Code era como hacer pair programming con alguien rápido, siempre presente, revisando línea a línea. Pero en la terminal era diferente. Escribías una instrucción, desaparecía un rato, y volvía con la tarea terminada. Era como entregarle las llaves del coche a un amigo nuevo para que se dé una vuelta solo. Da algo de miedo, pero vas cogiendo confianza.
+
+Al principio todo eran sorpresas positivas. Pero, tras unos días empezó a aparecer un patrón: “casi todo” estaba “casi perfecto”. El problema era mío: seguía pensando en el pair programming, pero él trabajaba solo.
+
+El contratoEn ese momento creé un copilot-instructions.md en la raíz del repo con reglas explícitas, algo así como mis 10 mandamientos para que no metiera nunca la pata. Además empecé a pedirle que lo editara. Lo íbamos mejorando juntos.
+
+Aquello funcionaba bastante bien, me permitía trabajar en un tema principal y pedir su ayuda en otros temas en paralelo… Fácilmente me encontraba con 3 consolas abiertas. Y fácilmente me quedaba sin tokens 🙃
+
+[FIGURE]
+Bring your own key… But not in Copilot CLIA día de hoy Copilot CLI no permite usar tu propia clave, una opción que sí está en VS Code. Espera, que lo miro otra vez, anda, ¡ahora sí se puede! El caso es que en ese momento no lo permitía. Y eso me llevó a probar OpenAI Codex, para gastar mis créditos de OpenAI.
+
+TIP 1: Si tienes créditos mensuales en Azure puedes crear un deployment de un modelo GPT Codex y usarlo con estos agentes. También puedes usar tus propios modelos locales. Flying free🎶TIP 2: copilot-instructions.md solo sirve para Copilot, AGENTS.md es (teóricamente) universal.Superado el problema de los tokens, volvía a mis múltiples consolas haciendo cosas súper importantes como esto o aquello. Pero tenía otro problema. A veces el agente necesita instrucciones y yo no estoy delante de la consola para dárselas. Porque uno tiene que hacer la cena, poner lavadoras, el adulting en general… Y por no decirle al agente “sí o no” a cualquier pregunta, pues ante la duda, él se queda parado esperando…
+
+[FIGURE]
+Fue entonces cuando conocí a OpenCode, que además de CLI, podías manejar la misma sesión con una interfaz web muy bonita. Así que solo me tocaba crear un relay para cada uno de mis agentes, y… Espera un momento… 🤔
+
+Así nació Codepods CLIAhora sí. Tengo mi AGENTS.md, tengo mi API_KEY de OpenAI, tengo mis agentes de terminal trabajando, pero cada vez que pierdo la sesión es un rollo, además no termino de fiarme del “sandbox” (le he pedido alguna vez que me leyera una variable de entorno y os digo que lo hace, aunque se llame API_KEY o GITHUB_TOKEN, o sea, que mejor no digo nada).
+
+Así que, mi becario y yo nos pusimos manos a la obra para crear Codepods. De momento se trata de un orquestador que rellena plantillas para crear agentes en contenedores Docker, gestiona la seguridad y ofrece una interfaz CLI y web para acceder a los agentes. Puedes crear agentes al vuelo y reutilizar ficheros como AGENTS.md o reemplazar valores comunes como tu BASE_URL y API_KEY de OpenAI.
+
+[FIGURE]
+Por cierto, una de las cosas que más me gustan de estos agentes de terminal es que NO necesitas tools, ni MCPs, ¡ni prácticamente nada! Pueden ejecutar lo que quieran con solo escribir un comando, como lo haríamos nosotros. Instala herramientas, controla contenedores, se conecta a Azure, crea repositorios en GitHub, con su pipeline si quieres, y publica el resultado en Pages él solito 😐.
+[FIGURE]
+Aunque todo arrancó con una gestión por CLI y un frontal cutre, al mantener toda la lógica del CLI compartida y expuesta en un API HTTP, implementar el frontal “bonito” ha sido relativamente sencillo. Gracias satnaing, por crear esta template tan bonita.Mi intención es evolucionarlo y que haga de gateway o proxy para controlar mejor qué sale y hacia dónde, pero de momento ya no se mezclan mis sesiones: Cada contenedor es una instalación independiente y muestra su menú de sesiones previas nada más arrancar 🤩.
+
+Ahora puedo tener 4 o 5 agentes de terminal en una máquina virtual de 30€ en Azure, trabajando en distintos proyectos, y no se paran cuando bajo la tapa del portátil. Toma ya.
+
+[FIGURE]
+Si usas agentes de terminal quizás Codepods te ahorre algún dolor de cabeza. El repo está en GitHub 👇 y PRs con nuevos tipos de agente son bienvenidas 😉
+
+🌐 https://github.com/bcgrillo/codepods (Abajo más capturas)
+
+¡Hasta la próxima!
+
+🏎️💨
+
+Más capturas de Codepods
+[FIGURE]
+
+[FIGURE]
+
+[FIGURE]

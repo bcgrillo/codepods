@@ -1,0 +1,106 @@
+TITLE: Inteligencia Artificial sin fórmulas: Generación Conversacional
+
+Por fin he conseguido sacar algo de tiempo para ponerme con esta tercera entrega y, ahora sí, llegamos a lo que más hype produce a día de hoy: la IA generativa. En esta ocasión me centraré en la generación de texto y, especialmente, en la generación conversacional, lo que los comunes de los mortales llaman ChatGPT.
+
+No en vano: si la arquitectura Transformer supuso un antes y un después desde el punto de vista técnico, el lanzamiento de ChatGPT en noviembre de 2022 hizo lo propio en la percepción social de esta tecnología. Llamó la atención por sus respuestas detalladas, su aparente capacidad de reflexión y su naturalidad. No era perfecto, pero era realmente asombroso. Nunca habíamos visto nada ni remotamente parecido.
+
+¿Y cómo lo han conseguido?En eso nos centraremos en esta entrega: La IA generativa conversacional.
+
+Aviso importante: Como en las anteriores entregas, aquí no vas a encontrar fórmulas raras ni matrices, ni cosas que parezcan salidas de una tesis en el MIT. A veces seré impreciso y muchas otras haré simplificaciones que harían que el propio Alan Turing se arrancara los pelos. Esto sigue siendo Inteligencia Artificial sin fórmulas, así que, si eres ingeniero de datos o doctor en estadística, por favor, no me tires piedras (ni datasets).
+### Antes de empezar
+Primeramente vamos a introducir una pequeña herramienta que nos será útil para entender la analogía que viene a continuación. Seguiremos fieles a la idea de “sin fórmulas” (como en el maravilloso blog El Tamiz, cuyo estilo he tomado prestado de alguna de sus series), pero esta vez necesitamos un artilugio matemático: la aproximación de funciones. No te preocupes, se entiende rápido incluso si jamás has oído hablar de ello.
+
+Una forma muy visual de entender el entrenamiento de las redes neuronales —que vimos al principio de la serie— es precisamente como un proceso de aproximación de funciones. Pensemos en una función sencilla, una que transforma un número en su mitad: f(x) = x/2​
+
+[FIGURE]
+Ahora imagina que no conoces la función, pero sí conoces sus resultados: un montón de puntos dibujados en una gráfica. Existen métodos matemáticos capaces de mirar únicamente esos puntos y deducir cuál es la función que mejor se ajusta a ellos. En el siguiente ejemplo, descubrirían que la recta que pasa más cerca de todos estos puntos es, efectivamente, f(x) = x/2​​.
+
+[FIGURE]
+¿Y por qué es útil eso?Porque, una vez aproximada la función, puedes interpolar o extrapolar nuevos puntos: predecir valores que no estaban en la gráfica original, siempre que sigan el mismo patrón.
+
+Por supuesto, no todas las funciones son rectas, a veces tienen curvas, ondulaciones, bifurcaciones, o ni siquiera pueden representarse en un plano porque la entrada tiene muchas “x” y la salida vive en un espacio con varias dimensiones. Pero la idea central sigue siendo la misma.
+
+Y lo interesante es que esta idea tan visual es equivalente a cómo entrenamos la inteligencia artificial.
+
+### Del entendimiento a la generación de texto (o text completion)
+En los dos artículos anteriores de esta serie vimos cómo las máquinas pueden percibir (gracias a las redes neuronales) y cómo pueden entendernos (gracias al procesamiento del lenguaje natural y los transformers)…
+
+Por cierto, si quieres comprender de verdad cómo funciona la IA generativa y todavía no los has leído, te recomendaría que empezaras por echarles un vistazo 😉.Hoy alcanzamos otro nivel: la inteligencia artificial generativa, cuando el sistema ya no solo entiende lo que decimos, sino que responde, escribe, crea, completa ideas o incluso mantiene largas conversaciones. Podríamos decir que, hasta ahora, habíamos enseñado a las máquinas a leer. Hoy vamos a ver cómo aprendieron a hablar.
+
+[FIGURE]
+En inteligencia artificial, la generación de texto se suele formular de forma muy sencilla: completar texto (text completion). El objetivo del modelo es, básicamente, calcular cuál es la siguiente palabra más probable. Esto lo hace a partir de lo que ha aprendido leyendo miles, o mejor dicho, millones de ejemplos.
+
+Y sí, lo sé: es probable que hayas leído esta explicación mil veces. Pero permíteme que pasemos por aquí una vez más antes de avanzar, porque aunque parezca simple, detrás de esta idea tan repetida se esconde buena parte de la esencia de lo que hace especial a la IA generativa.
+
+Por ejemplo, si escribes:
+
+“Había una vez un dragón que…”el modelo calcula qué palabras tienen más sentido después: “volaba”, “rugía” o “jugaba al ajedrez”. Elegirá la más probable o, si lo configuramos para que sea más creativo, alguna de las más probables. Por cierto, las primeras herramientas de autocompletado solían mostrarte varias opciones, no una sola.
+
+La gracia está en que esa probabilidad no tienen en cuenta solo en las últimas dos o tres palabras, como hace el teclado predictivo de tu móvil, sino en una comprensión semántica mucho más profunda, apoyada en ese enorme mapa de significados representados como números del que hablábamos en la entrada anterior.
+
+Ahora bien, el problema de esta explicación es que, al ser tan breve y concreta, suele dar una impresión equivocada. Parece que el modelo simplemente completa la frase como lo haría un niño si empiezas a cantar la estrofa de su canción favorita, y nada más lejos de la realidad.
+
+### Una operación semántica muy sofisticada
+También vimos cómo la arquitectura Transformer, al añadir información contextual a cada palabra (token, en realidad), hacía posible operaciones semánticas más avanzadas como las que se usan en la traducción automática: la misma palabra ahora puede traducirse de forma distinta según el contexto. De pronto, los típicos errores de “Google Translator” habían desaparecido. Pero por muy avanzada que sea una operación semántica: recibe una entrada y produce una salida, como cualquier función matemática.
+
+[FIGURE]
+De igual forma la generación de texto no es otra cosa que una operación semántica muy sofisticada: la inferencia. Y para que puedas visualizar la complejidad y elegancia matemática detrás de esa operación vamos a ilustrarlo como una metáfora: veremos cómo la inferencia es una aproximación de la función tener sentido. Vamos allá.
+
+Imagina un plano con los siguientes ejes:
+
+- x) la posición de una palabra dentro de una frase,
+- y) un identificador único para cada palabra de nuestro vocabulario.Cada frase de nuestro idioma puede representarse como una secuencia de puntos distribuidos en ese plano. Ahora imagina que escribimos millones de frases en millones de planos, y una vez hecho ese trabajo colosal, nos ponemos a aproximar una función que se ajuste a todos esos puntos. Si somos capaces de encontrar un patrón, ¿qué puede tener en común la lista de ingredientes de receta de tortilla de patatas y un diálogo de Romeo y Julieta?
+
+Que tienen sentido.
+
+La única función capaz de pasar “suavemente” por todos esos puntos de todas esas frases es precisamente la función tener sentido: un patrón estadístico gigantesco que describe cómo solemos encadenar ideas, conceptos y palabras.
+
+[FIGURE]
+Y aquí viene lo interesante: ese patrón, esa función, queda fijada en los parámetros del modelo. Todo lo aprendido durante el entrenamiento —gramática, giros, estilo, asociaciones, conocimiento implícito del mundo— se convierte en una especie de constante enorme que no cambia nunca para ese modelo. Lo que varía, las entradas de la función, son las palabras que escribes tú.
+
+### La predicción como extrapolación
+Cuando escribes una frase, el modelo toma todas las palabras anteriores y calcula cuál sería el “siguiente punto” que mejor prolonga la función tener sentido. Y gracias al mecanismo de atención, no mira solo el último token: tiene en cuenta todos los anteriores a la vez, ponderados según su relevancia.
+
+Si escribes:“La traducción de gato al inglés es ”la función extrapola el siguiente punto más coherente: “cat”.Si cambias los puntos de partida —gato por perro, inglés por portugués — la forma local de la función cambia, y el siguiente token lógico pasa a ser: “cão”.El proceso es siempre el mismo: seguir la tendencia de sentido que marcan las palabras anteriores.
+
+Pero… ¿realmente predice una palabra concreta?No exactamente. Y aquí matizamos la metáfora. La función no devuelve un único valor, sino una distribución de probabilidad sobre todo el vocabulario: una especie de “nube” de posibles continuaciones, unas más probables que otras. Esa nube es la verdadera salida del modelo. Elegir un token concreto es un paso posterior.
+
+Y aquí entran en juego dos parámetros que quizá te suenen:
+
+- Temperatura, que concentra o diluye la nube (más estricta o más creativa).
+- Top-p, que recorta los “extremos” y se queda solo con la parte de mayor probabilidad acumulada.
+[FIGURE]
+Son como pequeños “controles de precisión” que ajustan cómo se selecciona el punto final dentro de esa nube. La función tener sentido te da la forma de la nube; estos parámetros ajustan cómo decides dentro de ella.
+
+Con esto ya puedes empezar a intuir que, aunque hablemos de “completar texto”, lo que realmente ocurre es una operación semántica de altísima sofisticación: una función que, condicionada por todo lo que ha aprendido, extrapola la continuación que mejor mantiene la coherencia del texto.
+
+### Completar conversaciones: La idea que lo cambió todo
+Hasta aquí hemos hablado de generar texto, pero la verdadera revolución —la que sorprendió al mundo entero— llegó cuando alguien se hizo una pregunta tan simple como ingeniosa: “¿Y si entrenamos un modelo… con conversaciones?”
+
+No con artículos, no con Wikipedia, no con novelas… Conversaciones reales: preguntas, respuestas, dudas, aclaraciones, bromas, malentendidos, agradecimientos, cambios de tema, peticiones absurdas, disculpas por equivocaciones… todo ese caos maravilloso que define cómo nos hablamos los humanos. La idea, vista con perspectiva, era obvia; pero las herramientas de las que disponían en ese momento —la arquitectura Transformer capaces de aprender patrones sutilísimos— la convirtieron en algo radical: una máquina capaz de dialogar con nosotros en nuestro propio idioma.
+
+¿Y cómo se hace eso? Con algo sorprendentemente simple: delimitadores. Pequeños marcadores invisibles que indican quién habla y cuándo, como:
+
+<usuario>: Hola, ¿qué tal?<asistente>: Muy bien, gracias. ¿En qué puedo ayudarte?<usuario>: Explícame cómo funciona la inferencia.Al añadir miles y miles de ejemplos así, el modelo empezó a aprender no solo a tener sentido dentro de un texto, sino también a construir diálogos estructurados. La misma maquinaria matemática —la misma “función tener sentido”— pero aplicada a otro tipo de secuencia: conversaciones por turnos. Además de estos delimitadores, cada mensaje termina con un token especial de “fin de mensaje” (invisible para nosotros) que le dice al modelo cuándo debe dejar de generar texto y pasar al siguiente turno, un poco como cuando en un walkie-talkie dices “cambio” para indicar que has terminado de hablar.
+
+Y lo sorprendente es lo bien que funcionó. Lo que emergió no fue un chatbot programado a mano, sino un sistema que había internalizado patrones conversacionales: cómo se hace una pregunta, cómo se responde, cómo se continúa un hilo, cómo se cambia de tema, cómo se es educado y cómo se es conciso o detallado según el contexto… Todo ello sin reglas explícitas, solo aprendiendo de ejemplos.
+
+### Pero, no hay nadie al otro lado…
+Esta es quizá la parte más desconcertante. Cuando hablamos con una IA generativa sentimos que hay “alguien” o “algo” allí, que entiende lo que decimos y piensa su respuesta. Pero lo que ocurre realmente es mucho más mecánico. Cada vez que envías un mensaje, el sistema vuelve a procesar de nuevo toda la conversación como entrada completa al modelo y este genera su respuesta desde cero. Cada nuevo mensaje es una inferencia nueva e independiente del modelo. Nada “piensa” después de eso, ni hay una mente esperando tu próxima frase; hay un proceso que se enciende, calcula como completar la conversación, y se apaga.
+
+¿Y por qué parece que sí la hay? Porque la ilusión es muy poderosa. Cuando un texto tiene sentido, nuestra mente automáticamente atribuye intención, voluntad, coherencia… un alguien detrás. Pero lo que realmente hay es la “función tener sentido” aplicada ahora a diálogos: patrones aprendidos a partir de miles de ejemplos. Una herramienta muy avanzada aplicada a una idea sorprendentemente simple.
+
+Si preguntas a ChatGPT por qué te ha dado una respuesta concreta, el modelo tratará de responderte cómo lo haría un humano, justificarse, explicar una supuesta reflexión, pero en realidad, cualquier respuesta distinta de “porque era la secuencia de palabras más adecuada según mi configuración y entrenamiento” es una mentira.
+
+[FIGURE]
+El éxito de los modelos conversacionales abrió la puerta a algo todavía mayor: enseñar al modelo otros patrones además del diálogo común. Patrones de “razonamiento” (que realmente se trata de un diálogo interno previo o una planificación de la respuesta), programación, utilizar aplicaciones o explorar la Web… Todo aprendido igual, sin trucos nuevos: solo más ejemplos y la misma operación generativa. También ampliaron la comprensión del mundo yendo más allá del lenguaje con los modelos multimodales, que además de texto pueden recibir imágenes, sonidos, etc. Espero poder hablaros de ello en otro artículo.
+
+¡Muchas gracias por llegar hasta aquí! Espero haber logrado que este mundo, que a veces parece tan complejo, se vea un poco menos misterioso. Como siempre, si algo no ha quedado del todo claro, si quieres que profundice en alguna parte o si simplemente te apetece comentar, estaré encantado de leer tus dudas y curiosidades.
+
+👋
+
+Aclaración: En este artículo he simplificado muchas ideas que, en realidad, son matemáticamente complejas. Los modelos no trabajan en “planos” ni con una única función limpia: operan en espacios de miles de dimensiones y con millones de parámetros. Las metáforas usadas (planos, funciones, nubes, extrapolaciones…) no buscan representar literalmente el funcionamiento interno, sino dar una intuición visual y cercana. Además, es importante entender que los patrones aprendidos no dependen de palabras concretas, como he dibujado en los planos, sino de los vectores de miles de dimensiones donde cada dimensión aporta información diferente sobre esa palabra y su significado en el contexto.Si quieres explorar un poco más la generación conversacional y otros conceptos te dejo algunos enlaces:
+
+- Playground de TextSynth — Para experimentar con algunos modelos de text completion: https://textsynth.com/completion.html
+- Messages and Special Tokens — Cómo funcionan los tokens especiales: https://huggingface.co/learn/agents-course/unit1/messages-and-special-tokens
+- Chat Templates — Cómo funcionan las plantillas de conversaciones en diferentes modelos: https://huggingface.co/learn/llm-course/chapter11/2

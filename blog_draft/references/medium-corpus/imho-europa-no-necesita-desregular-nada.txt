@@ -1,0 +1,63 @@
+TITLE: IMHO: Europa no necesita desregular nada
+
+[FIGURE]
+Como os decía, quería empezar este blog para hablar de tecnología, pero también de otras cosas, y esta vez quería escribir de política. Y quería empezar con una humilde opinión, una unpopular opinion quizás. En estos tiempos que corren (IA hasta en la sopa, USA amenazando con sus aranceles y cosas peores, China imponiéndose con el coche eléctrico, etc.), son muchas voces que dicen que Europa debe “desregularse”, que nuestro exceso de regulación es un lastre para la innovación, que mientras OpenAI y DeepSeek pelean por el último modelo de razonamiento súper plus, nosotros estamos atando los tapones a las botellas de plástico. Por no hablar de la productividad… ¿Cómo vamos a competir con las 120 horas semanales de Musk, cuando tenemos a varios países europeos experimentando con la semana laboral de 4 días? ¡Y con más vacaciones y bajas por paternidad/maternidad!
+
+Aviso importante: Usaré Europa y Unión Europea indistintamente, porque sí, casi siempre refiriéndome a Unión Europea. Ya lo siento por británicos, suizos y noruegos.Bueno, amigos, pues in my humble opinion, no necesitamos desregular nada por una razón muy sencilla: vamos ganando.
+
+A ver, no es que yo crea que esto sea un paraíso, ni mucho menos, ni que ya podamos tumbarnos y disfrutar porque no queda trabajo por hacer. En realidad, pienso que aún queda mucho por mejorar en Europa, pero desde luego, una de esas cosas no es deshacernos de nuestra regulación.
+
+Para intentar convencerte de que esto es así, si es que hace falta, voy a enumerar algunos datos que respaldan mi afirmación. Así que allá vamos, justo después de esta broma de DeadPool sobre los daneses.
+
+[FIGURE]
+
+### ¿Por qué Europa juega en otra liga?
+
+### 1. Vivimos más y con más salud
+La población europea vive más años que la estadounidense o la china; en muchos países europeos la diferencia supera los 5 años. Los europeos, en promedio, disfrutan de mejor salud y menor mortalidad por causas prevenibles. La sanidad pública y la prevención (vacunaciones, controles, etc.) han reducido drásticamente enfermedades que aún afectan a otras regiones. La mortalidad infantil en Europa también es de las más bajas del mundo, y Europa logró altas tasas de vacunación y cobertura sanitaria incluso durante la pandemia. La regulación y la inversión en salud han dado fruto: los europeos no solo viven más, sino con más años de buena salud que los ciudadanos de EE.UU.
+
+Un indicador contundente es la mortalidad materna: Estados Unidos tiene la tasa más alta entre naciones desarrolladas, con 17 muertes por 100.000 nacimientos (2018), mientras en países de Europa occidental como Noruega, los Países Bajos o Alemania ronda 3 muertes por 100.000​. Eso supone que dar a luz en EE.UU. conlleva un riesgo de muerte hasta cinco veces mayor que en Europa.
+
+### 2. Protección social y pensiones
+Europa cuenta con los estados de bienestar más extensos del planeta. Muchos países de la UE destinan más del 25% de su PIB al gasto social, con casos como Francia superando el 30%. Eso significa salud, educación, pensiones y ayudas sociales. Y si alguno piensa que esto es un lastre, lo siento mucho, no está en mi equipo.
+
+Mientras algunos se mueren por no poder pagar un tratamiento de cáncer, se endeuda con hasta 1 millón de dólares para pagarse una carrera o tienen a 1 de cada 10 mayores de 65 años viviendo en la pobreza, todo esto en el “país más rico del mundo”, los europeos gozamos de sistemas públicos que cubren prácticamente toda la población en lo verdaderamente importante: salud, educación y pensiones. ¿Mejorable? Por supuesto, pero ganamos de calle.
+
+### 3. Seguridad y protección al consumidor y usuario
+
+[FIGURE]
+Los alimentos y bienes de consumo en Europa se producen bajo normas de seguridad y calidad muy estrictas, mucho mayores que en Estados Unidos o China. La UE prohíbe o limita numerosos aditivos alimentarios vinculados a riesgos de cáncer que en EE.UU. aún se usan en productos comunes. ¿Esto hay que desregular?
+
+Las regulaciones europeas en ámbitos como la seguridad de los automóviles, la calidad del aire o la protección de los trabajadores se encuentran entre las más exigentes del mundo, y han salvado innumerables vidas. La UE se ha destacado por proteger a los ciudadanos y usuarios de tecnología: Un ejemplo emblemático es el Reglamento General de Protección de Datos (GDPR), que se ha convertido en el estándar global de privacidad. Este marco ha inspirado a decenas de países a aprobar leyes similares — desde Brasil hasta Japón o incluso China, y la más reciente ley de Cookies.
+
+Gracias al “lastre” regulatorio europeo disfrutamos de llamadas y datos roaming sin coste extra cuando viajamos por Europa, transferencias bancarias inmediatas gratuitas desde este año, 3 años de garantía legal sobre los productos que adquirimos — que además deben ofrecer piezas para reparación durante 10 años — , un puerto USB C común para todos nuestros dispositivos, y en breve el fin del monopolio de Whatsapp. Es que gracias a la UE vas a poder conectar tu iPhone a accesorios de otras marcas, ¿qué locura verdad? 😏
+
+Qué queréis que os diga, a mí dadme todas las botellas con tapa atada que queráis.
+
+### 4. Transición ecológica y energía limpia
+La UE es pionera en la lucha contra el cambio climático y en la adopción de energías renovables. Europa se ha fijado por ley ser climáticamente neutra en 2050 y ya en 2020 las energías renovables superaban los combustibles fósiles en la generación eléctrica, ninguna otra gran potencia ha alcanzado aún esa transición. Resulta que 9 de los 10 países con mayor porcentaje de producción de energía solar y eólica son europeos.
+
+Por otro lado, Europa ha reducido sus emisiones de CO₂ aproximadamente un 30% desde 1990, cumpliendo con los objetivos de Kioto y París, mientras EE.UU. apenas empieza a recortarlas tras décadas de aumentos, y China — aunque invierte masivamente en renovables — aún tiene emisiones crecientes.
+
+La UE lidera en captación de inversiones tecnológicas para la eliminación de la huella de carbono, lo que también impulsa la economía. Estos avances demuestran que se puede crecer y, a la vez, descarbonizar: Europa ha desacoplado su crecimiento económico de las emisiones, algo posible gracias a políticas ambientales ambiciosas, y no a pesar de ellas.
+
+### 5. Reducción de la desigualdad
+Europa también sobresale por tener una distribución de la renta más equitativa en comparación con EE.UU. o China. El coeficiente de Gini en la UE es de apenas 29,6​, indicando menor desigualdad, mientras que en Estados Unidos supera los 41 puntos​ (uno de los más altos entre economías avanzadas). China, por su parte, tras años de desigualdad creciente, ha reducido su Gini a 35,7, aunque sigue estando por encima del nivel europeo.
+
+Esta menor brecha entre ricos y pobres en Europa se traduce en sociedades más cohesionadas y con menos problemas sociales, y la movilidad social (probabilidad de que alguien de origen humilde prospere) tiende a ser mayor en países nórdicos o centroeuropeos que en Norteamérica. Además, la pobreza infantil también es marcadamente menor en muchos países europeos gracias a las prestaciones familiares y ayudas a la crianza.
+
+Todo esto demuestra que la competitividad no requiere tolerar altos niveles de desigualdad. Europa, con todos sus matices internos, ha logrado combinar economías eficientes con sociedades más igualitarias que la media global. Lejos de ser un problema, las políticas redistributivas y regulaciones laborales (salarios mínimos, negociación colectiva, vacaciones pagadas, etc.) han contribuido a un crecimiento inclusivo.
+
+### Entonces, ¿no tenemos que hacer nada?
+Por supuesto, el hecho de que Europa lidere en esos terrenos no implica que deba quedarse inmóvil. Hay retos importantes pendientes, pero mi tesis es que podemos — y, sobre todo, debemos — afrontarlos sin desmontar nuestro modelo, sino más bien fortaleciendo lo que mejor hacemos los ciudadanos europeos: cuidarnos.
+
+Si Europa ya ha superado al mundo en salud, esperanza de vida, protección social y ecología, ahora queda hacerlo en educación y productividad (como escribió Piketty recientemente en un artículo en Le Monde). Y para ello (nuevamente IMHO) necesitamos:
+
+- Impulso de la I+D y la tecnología propia: En la carrera tecnológica global, la UE invierte proporcionalmente menos en investigación que sus rivales. Esto se refleja en menor desarrollo de industrias punta (digital, biotecnología, inteligencia artificial), donde dominan empresas estadounidenses y cada vez más chinas. Europa necesita destinar más recursos públicos y privados a innovación, favorecer el emprendimiento tecnológico y retener talento científico.Quiero aclarar en este punto que en lo que sí estoy de acuerdo es en que deberíamos simplificar y “desburocratizar” muchas cosas. En resumen, más inversión y mejor marco para la innovación, manteniendo nuestros valores.
+- Crisis de acceso a la vivienda y especulación inmobiliaria: Qué os voy a contar. Salvo que estés en el otro lado de este problema estarás de acuerdo conmigo en que es absurdo que el precio de la vivienda haya subido más rápido que los salarios en 19 de 25 países de la UE. Y este asunto es un tema que me pone de los nervios, porque no entiendo en absoluto el valor que aporta el negocio inmobiliario a la sociedad (y moriré en esa colina). Y aquí es donde más regulación (y no menos) puede ser la solución, necesitamos políticos valientes que se atrevan a enfrentar el monstruo de la especulación inmobiliaria, algo que, hasta ahora, solo hemos visto a pequeña escala en algunos municipios.
+- Protagonismo europeo en cooperación y desarrollo internacional Europa y sus Estados miembros aportan un 43% de toda la ayuda oficial al desarrollo mundial (70.200 millones de euros en 2021).​ Sin embargo, en los últimos años la influencia europea en regiones como África, América Latina o el sudeste asiático parece haberse estancado o retrocedido, en parte eclipsada por la expansión china y por la renovada competición geopolítica de EE.UU.Recuperar protagonismo significa proyectar el modelo europeo de derechos humanos, estado de derecho y economía social de mercado como una opción atractiva frente a otros modelos.
+- Blindar derechos y libertades de sus ciudadanos Ante la creciente amenaza de gobiernos extremistas que buscan recortar libertades fundamentales, Europa debe erguirse con fuerza y convicción. Es necesario establecer políticas que blindan, sin concesiones, los derechos de las mujeres y de la comunidad LGTBI en cada rincón del continente. No podemos permitir que se pretenda relegar a ningún ciudadano a una segunda categoría por razón de raza, género u orientación sexual. Si algunos insisten en retroceder hacia modelos autoritarios, la Unión Europea debería responder demostrando que el respeto a los derechos fundamentales es innegociable.En resumen, Europa puede seguir ganando sin perder su alma. Al final, el éxito no se mide solo en PIB, sino en el bienestar de las personas y en la sostenibilidad a largo plazo: ahí es donde el modelo europeo ya ha ganado y donde debe seguir avanzando.
+
+¡Gracias por leerme!
+
+👋

@@ -1,0 +1,88 @@
+{
+  "name": "@codepods/api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter @codepods/shared-types build && nest start --watch --tsc --webpack false -p tsconfig.json",
+    "build": "nest build -p tsconfig.build.json",
+    "start": "node dist/main.js",
+    "cli": "node dist/cli.js",
+    "build": "node scripts/rebuild-pty.js && nest build -p tsconfig.build.json",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src --ext .ts",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@codepods/shared-types": "workspace:*",
+    "@nestjs/common": "^10.3.10",
+    "@nestjs/core": "^10.3.10",
+    "@nestjs/platform-express": "^10.3.10",
+    "@nestjs/platform-socket.io": "^10.3.10",
+    "@nestjs/serve-static": "^5.0.5",
+    "@nestjs/swagger": "^7.4.2",
+    "@nestjs/typeorm": "^10.0.2",
+    "@nestjs/websockets": "^10.3.10",
+    "@types/adm-zip": "^0.5.8",
+    "adm-zip": "^0.6.0",
+    "archiver": "^5.3.2",
+    "better-sqlite3": "^12.11.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "dockerode": "^4.0.2",
+    "express": "^4.22.1",
+    "http-proxy": "^1.18.1",
+    "node-pty": "^1.1.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1",
+    "socket.io": "^4.7.5",
+    "swagger-ui-express": "^5.0.1",
+    "typeorm": "^0.3.20",
+    "yaml": "^2.9.0"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^10.4.2",
+    "@nestjs/schematics": "^10.1.4",
+    "@nestjs/testing": "^10.3.10",
+    "@types/archiver": "^5.3.4",
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/dockerode": "^3.3.29",
+    "@types/express": "^4.17.25",
+    "@types/http-proxy": "^1.17.17",
+    "@types/jest": "^29.5.12",
+    "@types/multer": "^2.2.0",
+    "@types/node": "^20.14.12",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.2",
+    "typescript": "^5.5.4"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "coverageThreshold": {
+      "global": {
+        "statements": 22,
+        "branches": 12,
+        "functions": 16,
+        "lines": 22
+      }
+    },
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@codepods/shared-types$": "<rootDir>/../../../packages/shared-types/src"
+    }
+  }
+}

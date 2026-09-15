@@ -1,0 +1,198 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+@custom-variant hover (&:hover);
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.147 0.004 49.25);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.147 0.004 49.25);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.147 0.004 49.25);
+  --primary: oklch(0.52 0.105 223.128);
+  --primary-foreground: oklch(0.984 0.019 200.873);
+  --primary-soft: oklch(0.68 0.12 223.128);
+  --secondary: oklch(0.967 0.001 286.375);
+  --secondary-foreground: oklch(0.21 0.006 285.885);
+  --muted: oklch(0.97 0.001 106.424);
+  --muted-foreground: oklch(0.553 0.013 58.071);
+  --accent: oklch(0.97 0.001 106.424);
+  --accent-foreground: oklch(0.216 0.006 56.043);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(1 0 0);
+  --success: oklch(0.6 0.17 150);
+  --warning: oklch(0.72 0.18 70);
+  --border: oklch(0.923 0.003 48.717);
+  --input: oklch(0.923 0.003 48.717);
+  --ring: oklch(0.709 0.01 56.259);
+
+  --chart-1: oklch(0.865 0.127 207.078);
+  --chart-2: oklch(0.715 0.143 215.221);
+  --chart-3: oklch(0.609 0.126 221.723);
+  --chart-4: oklch(0.52 0.105 223.128);
+  --chart-5: oklch(0.45 0.085 224.283);
+
+  --page-background: oklch(0.97 0.001 106.423);
+  --panel-background: oklch(1 0 0);
+  --secondary-item: oklch(0.96 0.001 106.423);
+  --secondary-item-hover: oklch(0.93 0.001 106.423);
+  --selected-secondary-item: var(--secondary-item);
+  --selected-secondary-item-hover: var(--secondary-item-hover);
+
+  --sidebar: var(--panel-background);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--accent-foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+
+  --sidebar-width: 3.5rem;
+  --secondary-width: 18rem;
+  --form-max-width: 42rem;
+
+}
+
+.dark {
+  --background: oklch(0.08 0.004 49.25);
+  --foreground: oklch(0.985 0.001 106.423);
+  --card: oklch(0.18 0.006 56.043);
+  --card-foreground: oklch(0.985 0.001 106.423);
+  --popover: oklch(0.18 0.006 56.043);
+  --popover-foreground: oklch(0.985 0.001 106.423);
+  --primary: oklch(0.52 0.105 223.128);
+  --primary-foreground: oklch(0.97 0.01 250);
+  --primary-soft: oklch(0.78 0.12 223.128);
+  --secondary: oklch(0.24 0.006 286.033);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.24 0.007 34.298);
+  --muted-foreground: oklch(0.62 0.01 56.259);
+  --accent: oklch(0.45 0.085 224.283);
+  --accent-foreground: oklch(0.984 0.019 200.873);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.985 0.001 106.423);
+  --success: oklch(0.7 0.17 150);
+  --warning: oklch(0.78 0.16 70);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.553 0.013 58.071);
+
+  --page-background: oklch(0.06 0.004 49.25);
+  --panel-background: oklch(0.14 0.006 56.043);
+  --secondary-item: oklch(0.18 0.007 56.043);
+  --secondary-item-hover: oklch(0.22 0.007 56.043);
+  --selected-secondary-item: var(--secondary-item);
+  --selected-secondary-item-hover: var(--secondary-item-hover);
+
+  --sidebar: var(--panel-background);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+
+}
+
+@theme inline {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-page-background: var(--page-background);
+  --color-panel-background: var(--panel-background);
+  --color-secondary-item: var(--secondary-item);
+  --color-secondary-item-hover: var(--secondary-item-hover);
+  --color-selected-secondary-item: var(--selected-secondary-item);
+  --color-selected-secondary-item-hover: var(--selected-secondary-item-hover);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply antialiased;
+  }
+  body {
+    @apply bg-background text-foreground;
+    margin: 0;
+  }
+  html,
+  body,
+  #root {
+    height: 100%;
+    overflow: hidden;
+  }
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+}
+
+@utility btn-icon {
+  @apply inline-flex items-center justify-center rounded-md p-1.5 text-muted-foreground transition-colors;
+  @apply hover:bg-primary/15 hover:text-primary-soft;
+}
+
+@utility nav-item {
+  @apply w-full flex items-center gap-3 px-2 py-2 rounded-md text-sm transition-colors;
+  @apply text-left text-foreground/70 hover:bg-primary/15 hover:text-primary-soft;
+}
+
+@utility nav-item-active {
+  @apply bg-primary/15 text-primary-soft;
+}
+
+/* Legacy form container — driven by --form-max-width. Toggling the
+ * variable flips all forms between limited-width (centered) and full-width. */
+@utility form-container {
+  margin-inline: auto;
+  width: 100%;
+  padding: 1rem 1rem 1.5rem;
+  max-width: var(--form-max-width);
+}

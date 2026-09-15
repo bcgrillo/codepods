@@ -1,0 +1,89 @@
+TITLE: Explorando Microsoft Agent Framework: Primeros pasos
+
+Recientemente, me sumergí en el mundo de Microsoft Agent Framework para poner a prueba su capacidad de conectar con Ollama y ejecutar agentes locales. La prueba fue bien, y al final decidí alargar un poco más el experimento para crear un pequeño sistema multiagente con algunas herramientas. He pensado en compartir esta experiencia con vosotros, así que… ¡allá vamos!
+
+[FIGURE]
+
+### ¿Qué es Microsoft Agent Framework?
+Microsoft Agent Framework es una herramienta que nos permite crear sistemas de agentes de IA de manera modular y flexible. Lo interesante es que podemos utilizar tanto servicios en la nube (Azure AI) como modelos locales (por ejemplo, a través de Ollama), lo que nos da una gran flexibilidad.
+
+Este framework permite:
+
+- Crear agentes especializados con responsabilidades específicas
+- Integrar diferentes proveedores de IA de manera transparente
+- Implementar patrones como middleware para funcionalidades transversales
+- Definir herramientas reutilizables que los agentes pueden utilizar
+- Mantener una clara separación de responsabilidadesLo que hace especial a este framework es su capacidad para abstraer la complejidad de la integración con diferentes modelos de IA, permitiéndonos centrarnos en la lógica de negocio de nuestros agentes.
+
+### Mi proyecto de ejemplo
+He estado trabajando en un proyecto de ejemplo que podéis encontrar en GitHub. El objetivo era crear un sistema que demostrara las capacidades básicas del framework mientras mantenía una arquitectura limpia y extensible.
+
+### Configuración para GitHub Models (Azure AI)
+Puedes utilizar los modelos de GitHub (vía Azure AI endpoint) de forma gratuita usando un Personal Access Token (PAT) de tu cuenta de GitHub. Para más información sobre cómo generar tu PAT y utilizarlo, visita: GitHub Models Quickstart — Paso 2: Realiza una llamada a la API
+
+Ejemplo de configuración en appsettings.json:
+
+{    "ClientConfiguration": {        "AzureAI": {            "BaseUrl": "https://models.github.ai/inference",            "ApiKey": "YOUR_GITHUB_PAT_HERE",            "AvailableModels": ["mistral-small-2503"]        }    }}Recuerda reemplazar YOUR_GITHUB_PAT_HERE por tu token personal de GitHub.
+
+### Los agentes
+En mi exploración, decidí crear tres tipos de agentes especializados:
+
+- Agente del Clima 🌤️: Un agente profesional que proporciona información meteorológica real utilizando la API de Open Meteo. Realiza geocodificación de ubicaciones y obtiene datos meteorológicos precisos incluyendo temperatura, sensación térmica, humedad, velocidad del viento y descripción detallada del clima.
+- Agente de Chat 💬: Un agente de conversación general que puede ayudar con consultas diversas y proporcionar información sobre la hora actual. Es el agente más sencillo pero demuestra cómo se pueden integrar herramientas básicas en un agente conversacional.
+- Agente de Búsqueda 🔍: Este fue particularmente interesante, ya que integra búsquedas web en tiempo real usando DuckDuckGo. El agente no solo busca información, sino que también procesa y formatea los resultados, extrayendo títulos, URLs y fragmentos relevantes de una manera legible y organizada.Cada agente está diseñado con un propósito específico y tiene sus propias instrucciones y herramientas. Por ejemplo, el agente de búsqueda incluye instrucciones detalladas sobre cómo procesar y presentar los resultados, cuándo realizar búsquedas y cómo manejar diferentes tipos de consultas.
+
+### La arquitectura
+1. Clase base abstractaCada agente hereda de una clase base (BaseAgent) que define la estructura común. Un aspecto importante es que la clase base maneja toda la lógica de creación del agente, incluyendo la aplicación automática del middleware, lo que mantiene el código limpio y encapsulado:
+
+public abstract class BaseAgent{    public abstract string Name { get; }    public abstract string Description { get; }    public abstract string Instructions { get; }        protected abstract AIFunction[] GetTools();        public virtual Func<AIAgent, FunctionInvocationContext, /* ... */> GetMiddleware()    {        return FunctionCallMiddleware.LoggingMiddleware;    }        public AIAgent CreateAgent(IChatClient chatClient)    {        // Create the base agent        var agent = new ChatClientAgent(            chatClient,            Instructions,            Name,            tools: GetTools()        );        // Apply middleware if available        var middleware = GetMiddleware();        if (middleware != null)        {            return agent.AsBuilder()                .Use(middleware)                .Build();        }        return agent;    }}2. Agentes especializadosCada agente implementa su lógica específica. Por ejemplo, el Agente de Búsqueda:
+
+public class SearchAgent : BaseAgent{    public override string Name => "🔍 Agente de Búsqueda Web";        public override string Description =>         "🔍 Busca información en internet usando DuckDuckGo";        public override string Instructions => """        Eres un asistente especializado en búsquedas web y recuperación de información.        **Tu propósito principal:**        - Ayudar a los usuarios a encontrar información relevante en internet        - Realizar búsquedas web usando DuckDuckGo cuando sea necesario        - Proporcionar resúmenes claros y organizados de los resultados        /* ... más instrucciones ... */        """;    protected override AIFunction[] GetTools()    {        return [AIFunctionFactory.Create(SearchTools.SearchWeb)];    }}3. Herramientas especializadasCada agente tiene acceso a herramientas específicas. Por ejemplo, las herramientas del clima:
+
+public static class WeatherTools{    [Description("Get current weather information for a given location name")]    public static async Task<string> GetWeather(string location)    {        // 1. Geocodificación de la ubicación        var coordinates = await GetCoordinatesInternalAsync(location);                // 2. Obtención de datos meteorológicos        return await GetWeatherByCoordinates(            coordinates.Value.lat,             coordinates.Value.lon,             coordinates.Value.name        );    }        // Métodos auxiliares para formateo y procesamiento...}
+### Flexibilidad en la elección del proveedor de IA
+Una característica que me pareció muy útil es la capacidad de alternar entre diferentes proveedores de IA. En este ejemplo el sistema permite elegir entre:
+
+- Ollama: Para ejecutar modelos localmente a través de un endpoint HTTP
+- Azure AI: Para utilizar modelos en la nube con una lista configurable de modelos disponiblesLa configuración es simple:
+
+public class ClientConfiguration{    public OllamaConfiguration? Ollama { get; set; }    public AzureAIConfiguration? AzureAI { get; set; }}// Configuración para Ollamapublic class OllamaConfiguration{    public string Endpoint { get; set; }}// Configuración para Azure AIpublic class AzureAIConfiguration{    public string BaseUrl { get; set; } = string.Empty;    public string ApiKey { get; set; } = string.Empty;    public List<string> AvailableModels { get; set; } = new();}Esta flexibilidad es especialmente importante cuando estamos desarrollando y probando, ya que podemos usar modelos locales para desarrollo y modelos más potentes en la nube para producción. La configuración nullable de ambos proveedores permite habilitar solo uno de ellos si así lo deseamos.
+
+### Lecciones aprendidas
+
+### Aspectos destacados del desarrollo
+1. Integración con APIs ExternasLa integración con la API de Open Meteo para el clima fue particularmente interesante. El sistema maneja:
+
+- Geocodificación de ubicaciones
+- Obtención de datos meteorológicos en tiempo real
+- Formateo amigable de la información incluyendo emojis
+- Manejo de errores y casos límite// Ejemplo de respuesta formateada del clima"☀️ Clima actual en Madrid, España:🌡️ Temperatura: 22.5°C (se siente como 23.1°C)📝 Descripción: Cielo despejado💧 Humedad: 45%💨 Viento: 12.3 km/h"2. Búsqueda Web InteligenteEl sistema de búsqueda web con DuckDuckGo incluye:
+
+- Parseo HTML robusto con expresiones regulares
+- Limpieza y formateo de resultados
+- Manejo de errores y timeouts
+- Presentación estructurada de resultadospublic static async Task<string> SearchWeb(string query){    // Realizar búsqueda en DuckDuckGo    var htmlContent = await GetSearchResults(query);        // Procesar y formatear resultados    var results = ParseDuckDuckGoHtml(htmlContent);        // Formatear respuesta con emojis y markdown    return FormatSearchResults(results);}3. Middleware y LoggingLa implementación de middleware permite:
+
+- Logging consistente de todas las llamadas a funciones
+- Medición de tiempos de respuesta
+- Puntos de extensión para futuras funcionalidadespublic static async ValueTask<object?> LoggingMiddleware(    AIAgent agent,    FunctionInvocationContext context,    Func<FunctionInvocationContext, CancellationToken, ValueTask<object?>> next,    CancellationToken cancellationToken){    Console.WriteLine($"🔧 Ejecutando: {context.Function.Name}");    var stopwatch = Stopwatch.StartNew();        var result = await next(context, cancellationToken);        stopwatch.Stop();    Console.WriteLine($"✨ Completado en {stopwatch.ElapsedMilliseconds}ms");        return result;}
+### Conclusión
+Microsoft Agent Framework ha demostrado ser una herramienta extraordinariamente potente para crear sistemas de IA modulares y extensibles. Lo que más me ha impresionado es:
+
+- Flexibilidad: La capacidad de trabajar con diferentes proveedores de IA
+- Modularidad: La facilidad para crear y mantener agentes especializados
+- Extensibilidad: El sistema de herramientas y middleware
+- Documentación: La claridad de la documentación disponible publicada por MicrosoftEste proyecto ha sido una excelente oportunidad para explorar las capacidades del framework. La combinación de agentes especializados con herramientas modulares ofrece un potencial enorme.
+
+Si estáis interesados en explorar más, podéis encontrar todo el código en mi repositorio de GitHub.
+
+La IA está evolucionando rápidamente, y frameworks como este nos permiten mantenernos al día de manera estructurada y profesional. ¡Espero que este artículo os haya sido útil y os anime a explorar Microsoft Agent Framework!
+
+### Agradecimientos
+Este proyecto fue inspirado por el excelente artículo de Anto Subash “Building an Agent Framework with Ollama” y su repositorio de ejemplo. He expandido el código con características adicionales y modificaciones para profundizar en el aprendizaje sobre Microsoft Agent Framework.
+
+### Recursos Útiles
+
+- Documentación oficial de Microsoft Agent Framework
+- Documentación de Microsoft.Extensions.AI
+- Documentación de Ollama
+- Azure AI Services¿Preguntas o sugerencias? ¡Deja tu comentario! 👋

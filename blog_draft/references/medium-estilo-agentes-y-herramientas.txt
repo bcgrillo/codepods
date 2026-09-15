@@ -1,0 +1,163 @@
+TITLE: Inteligencia Artificial sin fórmulas: Agentes y herramientas
+
+En las tres entregas anteriores de esta serie fuimos avanzando poco a poco por una especie de escalera. Primero vimos cómo las máquinas podían aprender (redes neuronales), después cómo podían entender el lenguaje (procesamiento del lenguaje natural) y, por último, cómo podían mantener una conversación y generar respuestas con una naturalidad sorprendente.
+
+Pero ahora toca dar otro paso, uno especialmente llamativo, porque es justo el que hace que mucha gente piense: “Vale, esto ya no es solo un chatbot”. Me refiero a los agentes. Es decir, sistemas que no se limitan a responder texto, sino que además parecen hacer cosas: consultar una base de datos, buscar en Internet, usar una calculadora, mirar el tiempo, mandar un correo o interactuar con otros programas.
+
+Y claro, en cuanto vemos eso, la pregunta sale sola:¿cómo puede un modelo de lenguaje usar herramientas?
+
+[FIGURE]
+Pues precisamente eso voy a intentar explicarlo hoy, y como siempre, sin complicarnos mucho en el camino.
+
+Aviso importante: Como en los artículos anteriores, aquí también voy a simplificar muchísimo. Un agente real puede llevar memoria, planificación, validaciones, reintentos, control de errores, varias herramientas a la vez, varios modelos distintos e incluso otros agentes trabajando en cadena. Pero si intentamos contarlo todo de golpe no se entiende nada. Así que nos quedaremos con la versión más simple, la suficiente para comprender la idea de base sin que a nadie le entren ganas de lanzar el portátil por la ventana.
+### Antes de empezar
+Lo primero que conviene dejar claro es algo que suele resultar bastante contraintuitivo: el modelo no utiliza realmente las herramientas; sigue generando solo texto.
+
+Sí, ya sé que esto suena raro. Porque cuando ves una demo parece exactamente lo contrario. Tú le pides a un asistente: “mira qué tiempo hace en Lisboa”, o “búscame un vuelo para mañana”, o “resume este PDF”, y unos segundos después te devuelve un resultado correcto. La impresión natural es pensar que la IA ha hecho esa búsqueda, ha abierto ese archivo o ha llamado a ese servicio.
+
+Pero, en realidad, lo que ha hecho el modelo es algo bastante más humilde: indicar que sería conveniente usar una herramienta, cuál usar y con qué parámetros. La ejecución real la hace otro sistema.
+
+Por tanto, si en el artículo anterior decíamos que una IA conversacional no era una mente pensando entre mensaje y mensaje, sino una máquina completando texto con mucho sentido, aquí debemos hacer una aclaración parecida: un agente no es una IA con manos digitales. No pulsa botones, no abre ventanas, no navega por la web como lo harías tú. Lo que hace es participar en una conversación más compleja donde, además de hablar, también puede solicitar determinadas acciones.
+
+### Del chatbot al agente
+En el artículo anterior vimos que la generación conversacional podía entenderse como una prolongación de la idea de text completion. En vez de completar simplemente una frase, el modelo completaba una conversación.
+
+Algo así:
+
+<usuario>: ¿Cuál es la capital de Japón?<asistente>: Tokio.Ese tipo de intercambio ya nos resultaba impresionante, pero sigue siendo, en esencia, texto que responde a texto.
+
+En la práctica, además, estos sistemas incluyen también un mensaje de sistema o system prompt: unas instrucciones invisibles para el usuario que le dicen al modelo qué papel debe adoptar, cómo debe comportarse o qué límites debe respetar. No es algo exclusivo de los agentes, pero aquí se vuelve imprescindible, se trata de una pieza clave para explicar cómo funcionan los agentes.
+
+Con los agentes, el formato de la conversación se amplía. Ahora, además de mensajes del sistema, del usuario y del asistente, puede haber otros elementos nuevos: herramientas disponibles, peticiones de uso de herramientas y resultados devueltos por esas herramientas.
+
+Por ejemplo:
+
+<sistema>: Eres un asistente útil. Puedes usar herramientas si lo necesitas.<usuario>: ¿Qué tiempo hace en Lisboa?<llamada-herramienta>: tiempo_actual { "ciudad": "Lisboa" }<respuesta-herramienta>: { "temperatura": 28, "estado": "despejado" }<asistente>: Ahora mismo en Lisboa hacen 28 grados y está despejado.Fíjate en la diferencia. La “llamada a herramienta” sale del asistente, pero cumple otra función: es una petición estructurada a una funcionalidad. Antes de responder al usuario, el asistente puede intercalar ese paso intermedio: pedir ayuda al mundo exterior.
+
+[FIGURE]
+He simplificado un poco, es verdad. También aparecería ahí la definición de las herramientas, y en la mayoría de modelos actuales puede haber además un paso intermedio de planificación o deliberación interna (razonamiento) antes de emitir la llamada formal a la herramienta. Pero, en el fondo, seguimos ante el mismo patrón que vimos en el artículo anterior: un modelo entrenado para completar una estructura textual con sentido. Solo que ahora esa estructura es más rica, con diferentes tipos de turnos.
+
+### Una conversación con cocina
+Para visualizarlo mejor, voy a recurrir a una analogía. Esta vez imaginemos un restaurante.
+
+Tú estás en la mesa y haces un pedido. El camarero lo escucha, lo entiende y redacta una comanda para cocina. La cocina prepara el plato, se lo devuelve, y el camarero te lo trae.
+
+Ahora bien: el camarero no cocina.
+
+Puede saber muchísimo de comida, puede expresarse muy bien, puede incluso aconsejarte qué pedir, pero no es quien enciende el fuego, corta la cebolla o saca el plato del horno. Su papel consiste en entender tu petición, traducirla correctamente a una orden operativa y luego presentarte el resultado de forma clara.
+
+Con los agentes pasa algo muy parecido.
+
+El usuario pide algo. El modelo interpreta la intención. Si necesita información o una acción externa, emite una especie de “comanda” formal. Otro sistema ejecuta esa comanda en la herramienta correspondiente. Luego el resultado vuelve al modelo, y el modelo lo integra en su respuesta final.
+
+La analogía no es perfecta, por supuesto, pero nos sirve para captar la idea esencial: el modelo no hace el trabajo externo; lo solicita de la forma adecuada.
+
+### El contrato de las herramientas
+Y aquí aparece la pregunta realmente interesante: ¿cómo sabe la IA qué herramientas existen y cómo debe pedirlas?
+
+La respuesta corta es: porque se lo contamos nosotros.
+
+Cuando construimos un sistema con herramientas, normalmente le pasamos al modelo dos cosas muy importantes:
+
+- un prompt de sistema, con instrucciones generales sobre su comportamiento,
+- y una descripción formal de las herramientas disponibles.Esa descripción formal actúa como una especie de contrato. Le dice al modelo qué herramientas tiene a su disposición, para qué sirve cada una y qué parámetros espera.
+
+Por ejemplo, podríamos darle algo parecido a esto:
+
+{  "name": "tiempo_actual",  "description": "Obtiene el tiempo actual de una ciudad",  "parameters": {    "type": "object",    "properties": {      "ciudad": {        "type": "string",        "description": "Nombre de la ciudad que se quiere consultar"      }    },    "required": ["ciudad"]  }}Lo importante aquí no es la sintaxis concreta, porque cada plataforma puede expresarlo de una forma ligeramente distinta. Lo importante es la idea: la herramienta está descrita en un lenguaje que el modelo puede interpretar.
+
+Su nombre, su propósito, los parámetros que necesita, el tipo de datos esperado… Todo eso forma parte del contexto de entrada, igual que antes formaban parte del contexto los mensajes del usuario o los delimitadores de conversación.
+
+Y esto tiene una consecuencia muy interesante: el modelo ya no se limita solo a la información de la que dispone en ese momento. Gracias a esa descripción, “sabe” que existen mecanismos externos con los que puede ampliar su conocimiento, comprobar un dato o realizar una acción antes de responder.
+
+### Cómo decide qué herramienta usar
+Llegados a este punto es fácil imaginar un pequeño duendecillo dentro del sistema pensando algo como: “ajá, ahora toca usar la calculadora”. Pero ya sabes que en esta serie no nos conformamos con la magia. Lo que ocurre en realidad encaja muy bien con todo lo que ya sabemos. El modelo recibe:
+
+- las instrucciones del sistema,
+- la conversación previa,
+- la lista de herramientas disponibles,
+- y la petición del usuario.Con todo eso, hace lo de siempre: inferir cuál es la continuación más adecuada.
+
+A veces esa continuación será una respuesta normal. Si preguntas “¿Quién escribió Don Quijote?”, probablemente responda directamente. Pero si preguntas “¿Qué tiempo hace ahora mismo en Lisboa?”, la continuación más coherente no es inventarse una temperatura, sino emitir una petición de herramienta.
+
+Es decir, desde el punto de vista del modelo, pedir una herramienta no deja de ser otra forma de continuar la conversación con sentido. Sigue habiendo inferencia estadística. Solo que ahora, entre las posibles continuaciones, hay algunas con una forma especial: llamadas a herramientas.
+
+### No siempre copia lo que tú dices
+Hay otra idea muy importante aquí, y a menudo pasa desapercibida. Cuando el modelo construye una llamada a una herramienta, no necesariamente copia literalmente palabras del usuario. Muchas veces deduce los parámetros.
+
+Por ejemplo, imagina que el usuario escribe:
+
+“¿Qué tiempo hace en la capital de Portugal?”La herramienta quizá espera un parámetro llamado ciudad, pero el usuario no ha escrito en ningún momento la palabra "Lisboa". Sin embargo, el modelo puede deducir perfectamente que la ciudad adecuada es Lisboa y producir una llamada como esta:
+
+tiempo_actual { "ciudad": "Lisboa" }Esto no debería sorprendernos demasiado, porque es exactamente el mismo tipo de capacidad semántica que ya hemos visto al hablar de lenguaje. Igual que un modelo puede entender que “la capital de Portugal” y “Lisboa” apuntan a la misma realidad cuando redacta una respuesta, también puede usar esa comprensión al preparar los parámetros de una herramienta.
+
+Y también puede ocurrir justo lo contrario: que el modelo entienda que no tiene suficiente información para construir una llamada correcta. En ese caso, en vez de lanzarse a inventar un parámetro, la continuación más sensata puede ser repreguntar.
+
+Imagina una herramienta para calcular una ruta que necesita saber el medio de transporte. Si el usuario dice:
+
+“Dime cuánto tardaría de Madrid a Toledo”y la herramienta necesita un parámetro como vehiculo, el modelo podría deducir ciudades de origen y destino, pero quizá no tenga forma razonable de saber si el usuario va en coche, en bicicleta o en tren. En ese caso, antes de llamar a la herramienta, podría contestar algo como: "¿Quieres que lo calcule en coche, en tren o en bicicleta?"
+
+Es decir, el agente no solo puede rellenar huecos cuando el contexto basta, también puede detectar que falta una pieza importante y pedirla antes de seguir.
+
+Esto tiene mucha importancia, porque significa que el agente no es un mero copiador de texto, un simple mensajero torpe que pega lo que ha dicho el usuario dentro de un formulario. Puede interpretar, transformar, completar y estructurar la información antes de pedir la acción externa.
+
+Claro que eso también implica riesgos: si interpreta mal, la llamada puede salir mal.
+
+[FIGURE]
+
+### La IA no ejecuta la herramienta
+Volviendo a lo contraintuitivo que decía al principio, cuando decimos que una IA “usa una herramienta”, solemos estar resumiendo demasiado. Lo que ocurre habitualmente en un sistema real es algo más parecido a esto:
+
+- El modelo recibe la petición del usuario junto con el contexto y las herramientas disponibles.
+- El modelo genera una solicitud formal indicando qué herramienta necesita y con qué parámetros.
+- Nuestro programa, el que hemos desarrollado alrededor del modelo, lee esa solicitud.
+- Ese programa ejecuta realmente la llamada a la API, a la base de datos, al buscador, al calendario o a lo que corresponda.
+- El resultado vuelve a incorporarse a la conversación.
+- El modelo genera la respuesta final para el usuario.Es decir: la IA propone la llamada, pero no la ejecuta por sí misma.
+
+Este detalle es crucial. Porque cuando se dice que “el modelo ha consultado la base de datos” o que “la IA ha enviado un correo”, lo que ha ocurrido en realidad es que el modelo ha producido una instrucción estructurada, y ha sido el software de alrededor quien ha hecho el trabajo de verdad.
+
+Dicho de otra forma: el modelo no es el brazo ejecutor, pero sí “decide” (mejor dicho, indica textualmente) qué botón hay que apretar.
+
+### La fontanería invisible
+A estas alturas quizá estés pensando: “Vale, entendido. Pero entonces, ¿por qué existen tantos frameworks de agentes?”. Pues porque, una vez entendida la idea básica, enseguida aparecen problemas prácticos por todas partes.
+
+Por ejemplo:
+
+- varias herramientas disponibles a la vez,
+- validación de parámetros,
+- control de errores,
+- reintentos si una llamada falla,
+- límites de uso,
+- memoria de pasos anteriores,
+- encadenamiento de varias acciones,
+- permisos y seguridad,
+- formatos de ida y vuelta entre modelo y herramientas.En un ejemplo pequeñito todo esto puede programarse a mano sin demasiados dramas. Pero cuando el sistema crece, necesitas una buena cantidad de “fontanería” para que todo circule correctamente.
+
+Y eso es, en gran medida, lo que aportan los frameworks: orquestación.
+
+[FIGURE]
+No es la “inteligencia mágica” del agente, sino más bien el cableado, las tuberías, los adaptadores, las juntas y las llaves de paso. Todo ese trabajo poco glamuroso pero imprescindible que permite que el modelo reciba herramientas, pida herramientas, reciba resultados, encadene pasos y no incendie la cocina a las primeras de cambio.
+
+### Entonces, ¿qué es realmente un agente?
+En una versión muy breve, podríamos decir que un agente es algo parecido a un chatbot con consecuencias: no solo responde, también puede desencadenar acciones fuera de la conversación, actuar el mundo real.
+
+No porque tenga manos. No porque tenga voluntad. No porque dentro haya una pequeña persona operando un teclado. Sino porque en el contexto de la conversación le hemos descrito unas capacidades, unas reglas y un formato para solicitarlas.
+
+Si en el artículo anterior decíamos que un modelo conversacional era una máquina que completaba diálogos con sentido, aquí podemos dar un paso más y decir que un agente es una máquina que completa guiones donde además de diálogo también pueden aparecer acciones.
+
+Y, claro, cuando una parte de esas acciones se ejecuta de verdad en el mundo exterior, la cosa empieza a parecer mucho más impresionante.
+
+Porque una alucinación en un chatbot normal puede ser una respuesta incorrecta. Molesta, sí, pero al fin y al cabo solo es texto. En cambio, una alucinación o una mala inferencia en un agente puede transformarse en una búsqueda equivocada, un correo enviado a quien no toca o incluso en el borrado accidental de miles de archivos.
+
+Por eso, en cuanto las IAs pasan de responder a actuar, aparecen con mucha más fuerza conceptos como validación, permisos, supervisión, diseño cuidadoso de herramientas y control del flujo. Y quizá ahí esté el verdadero salto. No en que la IA “piense” como nosotros, sino en que ahora puede participar en sistemas donde sus inferencias no terminan en una pantalla, sino que desencadenan cosas fuera de ella.
+
+¡Muchas gracias por llegar hasta aquí! Espero haber conseguido que eso de los agentes suene un poco menos a ciencia ficción y un poco más a una idea bastante lógica construida sobre todo lo que ya habíamos visto en las entregas anteriores. Como siempre, si algo no ha quedado claro, si quieres que profundice en alguna parte o si simplemente te apetece comentar, estaré encantado de leerte.
+
+👋
+
+Aclaración: En este artículo he simplificado deliberadamente algunos aspectos para centrarme en la idea esencial. En la práctica, cada proveedor y cada framework implementa las herramientas de forma ligeramente distinta: algunos modelos generan llamadas en JSON, otros utilizan bloques o tokens especiales, y otros encapsulan todo dentro de APIs de más alto nivel. Además, los ejemplos muestran siempre una única herramienta, cuando en un agente real una sola petición puede desencadenar varias acciones encadenadas — por ejemplo, consultar un calendario, buscar un restaurante y enviar una invitación — coordinadas por el software que rodea al modelo. Más allá de estas diferencias, el principio sigue siendo el mismo: el modelo recibe una descripción de las capacidades disponibles, genera una solicitud estructurada cuando lo considera oportuno y otro sistema se encarga de ejecutar las acciones reales.Si quieres profundizar un poco más en estos conceptos te dejo algunos enlaces:
+
+- Tool use / function calling — Explicación general del uso de herramientas en modelos de lenguaje: https://platform.openai.com/docs/guides/function-calling
+- Messages and Special Tokens — Cómo se estructuran distintos tipos de mensajes en sistemas conversacionales: https://huggingface.co/learn/agents-course/unit1/messages-and-special-tokens
+- What are agents? — Introducción divulgativa al concepto de agente: https://huggingface.co/docs/smolagents/conceptual_guides/intro_agents

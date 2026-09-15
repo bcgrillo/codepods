@@ -1,0 +1,37 @@
+# CodePods default egress whitelist
+# One domain per line. Lines starting with # are ignored.
+# Use specific service domains, not shared CDNs, to minimise domain-fronting risk.
+# Wildcards are supported: *.example.com matches subdomains of example.com.
+
+# --- LLM APIs ---
+api.anthropic.com
+api.openai.com
+
+# --- Git ---
+github.com
+api.github.com
+raw.githubusercontent.com
+objects.githubusercontent.com
+codeload.github.com
+
+# --- Node / npm ---
+registry.npmjs.org
+nodejs.org
+
+# --- Python ---
+pypi.org
+files.pythonhosted.org
+
+# --- Rust (uncomment if you use Rust) ---
+#crates.io
+#index.crates.io
+#static.crates.io
+
+# --- Go (uncomment if you use Go) ---
+#proxy.golang.org
+#dl.google.com
+
+# --- System packages (apt) ---
+archive.ubuntu.com
+security.ubuntu.com
+deb.debian.org
