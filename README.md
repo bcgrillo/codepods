@@ -1,212 +1,151 @@
-# Codepods
+# CodePods
 
-Codepods gestiona contenedores "agente-*" para orquestar sesiones de CLI de IA (OpenCode, Codex, Copilot) desde una VM con Docker.
+> **Beta** — Web-based platform for managing AI coding agents in Docker containers. Run isolated agent containers, access their terminals from the browser, proxy AI providers, manage MCP servers, and more.
 
-## Uso básico
+CodePods gives you a browser UI to create, start, stop, and manage AI coding agents running in isolated Docker containers. Each agent gets its own home directory, an optional shared workspace, a web terminal (xterm.js over WebSocket), and access to proxied AI providers, MCP servers, and skills — all without ever seeing the real API keys or credentials.
 
-```bash
-codepods menu
-```
+## Requirements
 
-El menú interactivo permite crear, entrar, pausar y eliminar agentes.  
-Al crear un agente se elige el **tipo** (opencode, codex, copilot) y se genera automáticamente su configuración a partir de las variables de `.env`.
+- **Node.js** >= 20 (tested on v22)
+- **pnpm** >= 9 (`corepack enable && corepack prepare pnpm@9 --activate`)
+- **Docker** (daemon running on `/var/run/docker.sock`)
+- **build-essential** (for `node-pty` native module compilation — `apt install build-essential` on Debian/Ubuntu)
+- **setfacl** (for per-agent filesystem ACLs — `apt install acl` on Debian/Ubuntu; needed when `forceNonRootUser` is ON)
 
-## Tipos de agente
-
-| Tipo | CLI | Config generada | Notas |
-|------|-----|-----------------|-------|
-| `opencode` | opencode-ai | `~/.opencode/opencode.jsonc` | Proveedor Azure OpenAI |
-| `codex` | @openai/codex | `~/.codex/codex.toml` | Proveedor OpenAI / compatible |
-| `copilot` | GitHub Copilot CLI | `~/.copilot/*` | Sesiones y auth de Copilot CLI |
-
-Cada tipo tiene su directorio en `templates/<tipo>/` y define su comportamiento desde `manifest.yml` (contrato de runtime: `services`, `mounts`, scripts e iconos).
-
-El API y el core usan `manifest.yml` como fuente de verdad para las rutas del contenedor montadas en `data/<agente>/...`.
-
-Cada tipo también incluye `configure.sh`, un script explícito que indica qué archivos renderizados se copian al contenedor y en qué rutas.
-
-Los campos clave son:
-
-- `description`, para describir el tipo.
-- `manifest.yml` define `services` (`id|kind|port`) y `mounts` (`nombre|ruta_contenedor`) como contrato operativo obligatorio.
-- `files/**/*.template` define archivos a inyectar dentro del contenedor. La ruta relativa bajo `files/` se interpreta como ruta absoluta en el contenedor (ej.: `files/root/.codex/config.toml.template` -> `/root/.codex/config.toml`).
-- `configure.sh` define el mapeo explícito de copia (`origen renderizado` -> `destino en contenedor`) usando `docker cp`.
-
-Las plantillas se renderizan sustituyendo `${VAR}` con los valores de `.env`, se guardan temporalmente en `tmp/codepods/<agente>/configs/<tipo>/` y luego se copian con `docker cp` al contenedor destino para evitar que el propio contenedor cree archivos root-owned en el host.
-
-## Estructura del proyecto
-
-```
-manage-agents.sh        # Script principal
-templates/            # Definición de cada tipo de agente
-  opencode/
-    manifest.yml
-    files/root/.opencode/opencode.jsonc.template
-  codex/
-    manifest.yml
-    files/root/.codex/config.toml.template
-  copilot/
-    manifest.yml
-docker/                 # Contenedor reservado para utilidades Docker
-build-files/
-  AGENTS.md             # Instrucciones copiadas en el contenedor
-scripts/                # Utilidades auxiliares
-src/Codepods.Api/       # Servicio web .NET (OpenAPI/Swagger)
-src/Codepods.Cli/       # CLI principal .NET
-data/                   # Workspace de cada agente (ignorado en Git)
-tmp/                    # Directorios temporales para builds y configs (ignorado en Git)
-```
-
-## API Service
+## Quick Start
 
 ```bash
-codepods web start
+# 1. Clone
+git clone https://github.com/bcgrillo/codepods.git
+cd codepods
+
+# 2. Install dependencies
+pnpm install
+
+# 3. Build everything
+pnpm build
+
+# 4. First-run setup (creates the admin user)
+cd apps/api
+node dist/cli.js setup
+# You'll be prompted to set a password (or one will be generated and shown once)
+
+# 5. Start the server
+cd ../..
+pnpm --filter @codepods/api start
 ```
 
-- Swagger UI: `https://localhost:8000/swagger`
-- OpenAPI: `https://localhost:8000/swagger/v1/swagger.json`
-- Health: `https://localhost:8000/health`
+Then open http://localhost:3000 in your browser. The backend serves the frontend SPA at `/` in production mode.
 
-Comandos:
-- `codepods web start`
-- `codepods web stop`
-- `codepods web status`
-- `codepods web login`
-- `codepods web users list|add|remove`
-- `codepods web devices list|add|remove`
+### Development mode
 
-## Frontend (Vite + shadcn seed)
-
-Se ha añadido una base frontend limpia en `src/Codepods.Frontend` y un repositorio de referencia en `examples/shadcn-admin-reference` (solo para copiar bloques visuales puntuales, no para usarlo como app final).
-
-Flujo recomendado:
+For development with hot reload:
 
 ```bash
-cd src/Codepods.Frontend
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
-Para compilar y sincronizar el build dentro del API (`src/Codepods.Api/wwwroot`):
+- Frontend: http://localhost:5173 (Vite dev server with HMR)
+- API: http://localhost:3000/api
+- Vite proxies `/api` and `/socket.io` to the backend automatically.
+
+## First Run
+
+1. **Build**: `pnpm build` compiles all packages and apps.
+2. **Setup**: `node dist/cli.js setup` (from `apps/api/`) creates the admin user. You'll set or receive a password.
+3. **Start**: `node dist/main.js` (from `apps/api/`) or `pnpm --filter @codepods/api start`.
+4. **Login**: Open http://localhost:3000, log in with the admin credentials.
+5. **First device**: On first login from a new browser/device, you'll get a 6-char approval code. Approve it from the host: `node dist/cli.js approve <code>` (from `apps/api/`).
+6. **Create an agent**: Navigate to Agents → New, pick a template from the marketplace, and create your first agent.
+
+## Configuration
+
+Config file: `~/.codepods/config.json` (auto-created with defaults, mode 0600).
+
+Key settings:
+
+| Setting | Default | Description |
+|---|---|---|
+| `dataDir` | `./data/` | Data directory (SQLite DB, repos, keys, skills) |
+| `port` | `3000` | HTTP API port |
+| `docker.forceNonRootUser` | `false` | Per-agent dedicated uid with ACL isolation |
+| `networkSecurity.filterInternetEgress` | `true` | Filter agent internet traffic through egress proxy whitelist. API gateway always active. |
+| `tlsEnabled` | `false` | Enable HTTPS |
+
+See [Configuration](docs/config.md) for the full reference. Environment variables (`DATA_DIR`, `PORT`, `TLS_ENABLED`, etc.) override file values.
+
+## Project Structure
+
+```
+apps/
+  web/               # React 18 + Vite 5 frontend
+  api/               # NestJS 10 backend
+packages/
+  shared-types/      # Shared TypeScript interfaces and DTOs
+  shared-config/     # Shared app configuration types
+  shared-validation/ # Zod validation schemas
+  sdk/               # Type-safe HTTP client
+```
+
+Package manager: pnpm 9+ with workspaces.
+
+## Scripts
 
 ```bash
-cd src/Codepods.Frontend
-npm run build:api
+pnpm dev          # Start all apps in parallel (watch mode)
+pnpm build        # Build all apps and packages
+pnpm test         # Run all unit tests
+pnpm type-check   # TypeScript type check across all packages
+pnpm lint         # ESLint all packages
 ```
 
-Al arrancar el API, si existe `wwwroot/index.html`, el servidor también sirve el frontend SPA.
+## Data
 
-## API Authentication
+- SQLite database: `<dataDir>/codepods.db` (default: `apps/api/data/codepods.db`)
+- Encryption keys: `<dataDir>/keys/master.key`
+- Agent homes: `<dataDir>/homes/<agentId>/`
+- Skills: `<dataDir>/skills/`
+- Discovered repos: `<dataDir>/repos/`
 
-1. Login:
-`POST /api/auth/login` with `username`, `password`, and optional `device_id`.
+Override the data directory: `DATA_DIR=/path/to/dir`
 
-2. Use token:
-Add `Authorization: Bearer <access_token>` for protected endpoints.
+## Current Limitations (Beta)
 
-3. Current session:
-`GET /api/auth/me`
+CodePods is in beta. Here's what to be aware of:
 
-Primera instalación:
-- Si la tabla `user` está vacía, se crea automáticamente un superadmin usando `DASH_USER` y `DASH_PASSWORD`.
+- **Single CodePod**: only `id=1` ("default") exists. Multi-tenant support is coming.
+- **Single user**: only one admin account. Multi-user with roles is planned.
+- **Container→API auth**: agent identity is established via egress proxy (source IP + HMAC, ADR-036). No shared secret in containers. See [Agent Gateway](docs/agent-gateway.md).
+- **No DB migrations**: TypeORM `synchronize: true` is used. Migrations needed before production.
+- **No audit logging**: critical actions (container start, credential access, git push) are not yet logged.
+- **Credential usage tracking**: removing a credential in use leaves a dangling reference; the UI doesn't yet show where credentials are used.
+- **stdio MCP transport**: only HTTP MCP transport is supported; stdio is coming.
 
-## Setup
+## Documentation
 
-Prerequisitos:
-- .NET SDK 8+
-- Docker Engine accesible por el usuario actual (`docker info` debe funcionar sin sudo)
-- Node.js + npm (instalación compila frontend y lo sincroniza con el API)
+- [Documentation Style Guide](docs/STYLE.md) — Structure, conventions, and template for all docs
 
-Si aparece `permission denied while trying to connect to the docker API at unix:///var/run/docker.sock`:
+### Architecture & Systems
 
-```bash
-sudo groupadd docker 2>/dev/null || true
-sudo usermod -aG docker $USER
-newgrp docker
-```
+- [Frontend Architecture](docs/frontend.md) — React 18, Tailwind v4, shadcn/ui, 3-pane layout, design system
+- [SDK](docs/sdk.md) — Type-safe HTTP client, auth token plumbing
+- [System Configuration](docs/config.md) — Config file, env overrides, all settings
+- [Network Security](docs/network-security.md) — Egress filtering, host firewall (ufw) requirements
 
-Después vuelve a validar con:
+### Modules
 
-```bash
-docker info
-```
-
-1. Copia `.env.example` a `.env` y rellena las variables de tu proveedor
-2. Construye la imagen: `docker build -f docker/Dockerfile -t codepods-agent:dev .`
-3. Instala CLI de desarrollo: `./install.sh`
-4. Ejecuta `codepods menu` y crea tu primer agente
-
-## Release installation (without package manager)
-
-Instalador remoto para binarios release de GitHub:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/lualab-xyz/CodexAgentsManager/main/scripts/install-release.sh | bash
-```
-
-Opciones:
-- `CODEPODS_VERSION=vX.Y.Z` para fijar versión concreta.
-- `CODEPODS_INSTALL_DIR=/custom/bin` para cambiar ruta de instalación.
-
-### Backup de clave maestra (`master.key`)
-
-Codepods usa una clave maestra local para criptografía interna (sesión, fingerprint de dispositivo y cifrado de variables secretas por derivación de subclaves).  
-Tras el primer arranque, haz backup seguro de `master.key`:
-
-- Si instalas desde repo (dev): `var/keys/master.key` dentro de la raíz del proyecto.
-- Si instalas desde release: la ubicación depende del root efectivo de ejecución; localízala y respáldala en un vault/secret manager.
-
-Si se pierde la clave, no podrás recuperar secretos cifrados existentes.  
-Si se filtra, un atacante podría descifrar esos secretos.
-
-## Variables de entorno (`.env`)
-
-Ver `.env.example` para la lista completa. Variables clave:
-
-- **OpenCode/Azure**: `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_BASE_URL`, `AZURE_OPENAI_DEPLOYMENT`, `AZURE_OPENAI_MODEL_NAME`, `AZURE_OPENAI_RESOURCE_NAME`
-- **Codex/OpenAI**: `OPENAI_API_KEY`, `OPENAI_BASE_URL`, `CODEX_MODEL`
-- **GitHub**: `GITHUB_TOKEN` (se expone en el contenedor para que tus scripts o CLIs lo usen según necesiten)
-- **Copilot CLI**: `COPILOT_GITHUB_TOKEN` (PAT fine-grained con el scope _Copilot Requests_ si trabajas con `copilot --resume`)
-- **Copilot CLI**: `COPILOT_MODEL` (modelo por defecto que se aplica al arrancar `copilot --resume --yes`)
-
-## Control de las variables dentro de los agentes
-
-Puedes definir `.env.template` en `templates/shared/` y/o `templates/<tipo>/`. Ambos se renderizan (en ese orden) y se concatenan en `tmp/codepods/<agente>/configs/<tipo>/env/container.env`, que es el archivo que se pasa a `docker run --env-file`. Si no existe ninguno, el lanzamiento recurre al `.env` de la raíz.
-
-## Persistencia de sesiones y configuración
-
-Cada tipo define `mounts` en `templates/<tipo>/manifest.yml` como una lista de entradas `nombre|ruta_contenedor`. Al crear o arrancar un agente, el gestor crea en `data/<agente>/<nombre>` un directorio que se monta en el contenedor en la ruta indicada, garantizando así que la configuración y los estados de sesión se guarden fuera de la imagen. Ejemplos actuales:
-
-| Tipo | Valor de `mounts` | Qué persiste |
-|------|-----------------------------|--------------|
-| `copilot` | `workspace|/workspace`<br>`config|~/.copilot` | Workspace persistente más configuración y `session-state` |
-| `codex` | `workspace|/workspace`<br>`config|~/.codex` | Workspace persistente y rollouts/config |
-| `opencode` | `workspace|/workspace`<br>`config|~/.opencode`<br>`share|~/.local/share/opencode` | Workspace general, sesiones globales, logs y config |
-
-Así podemos reconstruir imágenes o reiniciar contenedores sin perder sesiones. Puedes añadir nuevos montajes nombrándolos como prefieras (`sessions`, `data`, etc.) y usarlos en tus scripts de arranque.
-
-La primera entrada de `mounts` siempre debe ser `workspace|/workspace`, ya que esa carpeta se mapea a `/workspace` dentro del contenedor y sirve como punto de trabajo compartido con el host.
-
-## Contextos temporales seguros
-
-El script ahora usa `tmp/codepods/<nombre-de-agente>/` como raíz para todo el trabajo temporal: los contextos de build (`build-context-XXXXX`), los ficheros de configuración intermedios y el bloqueo que impide que se construyan dos veces el mismo agente a la vez (`.building`). Justo antes de mostrar el menú principal se limpia cualquier directorio de `tmp/codepods/` con más de 24h, y se ignora la carpeta `tmp/` en Git para que esos artefactos nunca se versionen. Esto permite construir imágenes desde un contexto controlado y evita que datos residuales de `data/` se cuelen en el build.
-
-## Añadir nuevos tipos de agente
-
-1. Crea `templates/<nombre>/manifest.yml` y define `services` y `mounts`.
-2. Añade los templates del contenedor dentro de `templates/<nombre>/files/` usando `.template` (ej.: `files/root/.tu-cli/config.toml.template`). Usa `${VAR}` para referirte a variables del `.env` de la raíz.
-3. Añade `templates/<nombre>/.env.template` si necesitas variables exclusivas del tipo.
-4. En `manifest.yml`, define `mounts`, asegurándote de que la primera entrada es `workspace|/workspace` para que `/workspace` sea persistente y los montajes restantes cubran config, logs o datos añadidos.
-5. Implementa `configure.sh` para copiar explícitamente cada archivo renderizado a su destino dentro del contenedor.
-
-Las plantillas se renderizan sustituyendo `${VAR}` desde `.env`, así que no es necesario habilitar nada adicional.
-
-## Scripts de inicio por tipo
-
-Cada carpeta `templates/<tipo>/` debe incluir un `start.sh` que arranca el CLI del agente. Cuando ejecutas `enter_agent_shell` el script se renderiza (para sustituir variables de `.env`), se copia al contenedor en `/usr/local/bin/<tipo>-start` y se ejecuta cada vez que se reanuda el agente. Esto permite, por ejemplo, que Copilot aplique `COPILOT_MODEL`, que Codex use `CODEX_MODEL` o que OpenCode muestre el selector de sesiones. Si un tipo necesita un `ENTRYPOINT` especial, añádelo al `Dockerfile` de ese tipo.
-
-## Notas
-
-- Los datos de cada agente viven en `data/<nombre>/` (montado como `/workspace`)
-- Al eliminar un agente, sus datos se mueven a `data/.trash/<nombre>` (recuperables)
-* La config generada se guarda en `tmp/codepods/<agente>/configs/<tipo>/` y se inyecta al contenedor con `docker cp`
+- [Agents](docs/agents.md) — Agent lifecycle, creation, command execution, requests
+- [Console](docs/console.md) — WebSocket terminal (node-pty + xterm.js)
+- [Authentication](docs/auth.md) — Admin auth, device approval, token mechanism
+- [AI Proxy](docs/ai-proxy.md) — Provider proxy with key injection
+- [MCP](docs/mcp.md) — Model Context Protocol server registry and proxy
+- [Managed APIs](docs/managed-apis.md) — External HTTP API registry with credential injection
+- [Skills](docs/skills.md) — Skill sources, SKILL.md format, agent delivery
+- [Credentials](docs/credentials.md) — Encrypted credential vault (AES-256-GCM)
+- [Agent Templates](docs/agent-templates.md) — Template manifest, Dockerfile, commands
+- [Central Repositories](docs/central-repos.md) — Template and provider discovery
+- [Workspaces](docs/workspaces.md) — Workspaces, git integration
+- [Git Proxy](docs/git-proxy.md) — Git command whitelist, identity enforcement
+- [Services](docs/services.md) — Agent web service proxy
+- [AGENTS.md](docs/agents-md.md) — Versioned agent operative guides

@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60">
+  <style>
+    path,
+    rect {
+      fill: none;
+      stroke: #21a8ce;
+    }
+    @media (prefers-color-scheme: dark) {
+      path,
+      rect {
+        stroke: #4ec8ef;
+      }
+    }
+  </style>
+  <path
+    stroke-width="5.0004"
+    stroke-linejoin="round"
+    stroke-miterlimit="1"
+    d="M 54.57095,15.428953 44.574295,5.425935 C 42.77004,3.615321 40.26993,2.5 37.49993,2.5 H 12.49991 C 6.95992,2.5 2.5,6.95991 2.5,12.499903 v 25.00004 c 0,2.769989 1.11483,5.270129 2.92557,7.074509 l 10.00317,9.9968" />
+  <rect
+    x="12.5"
+    y="12.5"
+    width="45"
+    height="45"
+    rx="10"
+    stroke-width="5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-miterlimit="1" />
+  <path
+    d="m 29.262513,22.906256 -8.4375,8.4375 8.4375,8.437502"
+    stroke-width="5.00001"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-miterlimit="1" />
+  <path
+    d="m 40.737523,22.906256 8.4375,8.4375 -8.4375,8.437502"
+    stroke-width="5.00001"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-miterlimit="1" />
+  <path
+    d="m 40.737523,39.781258 v 8.4375"
+    stroke-width="5.00001"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-miterlimit="1" />
+</svg>
